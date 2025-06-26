@@ -43,3 +43,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Nextcloud / ownCloud sync journal files
+.sync_*.db
+.sync_*.db-shm
+.sync_*.db-wal
+csync_journal.db
+._sync_*.db
