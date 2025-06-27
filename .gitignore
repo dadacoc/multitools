@@ -4,6 +4,7 @@
 *.pyc
 *.swp
 .DS_Store
+Desktop.ini
 .atom/
 .build/
 .buildlog/
