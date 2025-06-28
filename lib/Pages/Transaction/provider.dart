@@ -9,9 +9,10 @@ final logger = Logger(
 
 class TransactionsProvider extends ChangeNotifier {
 
-  //Controller
-  late TextEditingController sommeTotalADonner;
-  late TextEditingController sommeTotalARecevoir ;
+
+  //Variable
+  double totalToGive = 0.0;
+  double totalToGet = 0.0;
 
   //Data
 
@@ -92,8 +93,8 @@ class TransactionsProvider extends ChangeNotifier {
       for (var item in getCheckGet){
         totalGet+= item['somme'];
       }
-      sommeTotalADonner = TextEditingController(text: totalGive.toStringAsFixed(2));
-      sommeTotalARecevoir = TextEditingController(text: totalGet.toStringAsFixed(2));
+      totalToGive = totalGive;
+      totalToGet = totalGet;
 
       }catch (e, s) {
       logger.e("Erreur lors du calcul de la somme totale", error: e, stackTrace: s);
@@ -101,16 +102,13 @@ class TransactionsProvider extends ChangeNotifier {
       }
     }
 
-  Future<void> deleteData(bool value,int id,TextEditingController controller,double somme) async {
+  Future<void> deleteData(int id) async {
     try {
       await database.delete(
           'Transaction_main',
           where: 'id = ?',
           whereArgs: [id]
       );
-      if (value){
-        controller.text = (double.parse(controller.text) - somme).toStringAsFixed(2);
-      }
     }catch (e, s) {
       logger.e("Erreur lors de la suppression de la donnée id: $id", error: e, stackTrace: s);
       rethrow;
@@ -118,56 +116,57 @@ class TransactionsProvider extends ChangeNotifier {
   }
 
   Future<void> updateStateCheck(bool value,int id) async {
-    await database.update(
-      'Transaction_main',
-      {'checked': value ? 1 : 0}, // Convertit le booléen en 0/1
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
-
-  Future<void> updateSomme(bool? value,int id,TextEditingController controller , double somme) async{
-    double valueController = double.parse(controller.text);
-    if (value==true){
-      controller.text = (valueController+somme).toStringAsFixed(2);
-    }else {
-      controller.text = (valueController-somme).toStringAsFixed(2);
+    try {
+      await database.update(
+        'Transaction_main',
+        {'checked': value ? 1 : 0}, // Convertit le booléen en 0/1
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+      }catch (e,s){
+      logger.e("Un problème à eu lieu lors du updateStateCheck id: $id",error: e,stackTrace: s);
+      rethrow;
     }
-    await updateStateCheck(value!, id);
-    await loadData();
+    }
 
-  }
 
 
   //Ajout :
 
   Future<void> addData({required String category,required double somme,required String nom, required String cause}) async {
-    await database.insert(
-        'Transaction_main',{
-      'category' : category,
-      'somme' : somme,
-      'nom' : nom,
-      'cause' : cause
+    try {
+      await database.insert(
+          'Transaction_main',{
+        'category' : category,
+        'somme' : somme,
+        'nom' : nom,
+        'cause' : cause
+      }
+      );
+    } catch (e,s){
+      logger.e("Une erreur a eu lieu lors du addData ",error: e,stackTrace: s);
+      rethrow;
     }
-    );
-    await loadData();
   }
 
   //Edit
 
   Future<void> editData({required int id , required String nom , required double somme,required String cause})async {
-    await database.update(
-      'Transaction_main',
-      {
-        'nom' : nom,
-        'somme' : somme,
-        'cause' : cause
-      },
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-    await loadData();
+    try {
+      await database.update(
+        'Transaction_main',
+        {
+          'nom' : nom,
+          'somme' : somme,
+          'cause' : cause
+        },
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+    }catch (e,s) {
+      logger.e("Une erreur a eu lieu lors de editData , id: $id",error: e,stackTrace: s);
+      rethrow;
+    }
   }
-
 
 }
