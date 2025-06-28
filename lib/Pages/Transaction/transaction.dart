@@ -103,6 +103,17 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
 
   }
 
+  Future<void> _handleLoadData() async {
+    TransactionsProvider provider = Provider.of<TransactionsProvider>(context,listen: false);
+
+    try {
+      await provider.loadData();
+    }catch (e) {
+      _showErrorSnackbar("Erreur : Chargement des données");
+    }
+  }
+
+
   late final TabController _tabController;
 
   @override
@@ -388,16 +399,8 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
           onPressed: () async {
             bool? add = await context.push('/Transaction/AddTransaction');
             if (add==true){
-              try {
-                await provider.loadData();
-              }catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text(
-                          "Un problème est survenu lors du chargement des données")));
-                }
+              await _handleLoadData();
               }
-            }
           },
           child: Icon(Icons.add),
         ),

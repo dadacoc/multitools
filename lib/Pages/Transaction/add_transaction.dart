@@ -54,6 +54,16 @@ class _ADonnerState extends State<ADonner> {
 
   late TransactionsProvider provider;
 
+  Future<void> _handleaddData({required double somme,required String nom, required String cause}) async {
+    try {
+      await provider.addData(category: 'ToGive', somme: somme, nom: nom, cause: cause);
+    } catch (e) {
+      if (mounted){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Une erreur à eu lieu lors de l'ajout de la transaction")));
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -71,9 +81,6 @@ class _ADonnerState extends State<ADonner> {
 
   }
 
-  Future<void> saveData({required TransactionsProvider provider,required double somme,required String nom,required String cause}) async {
-    await provider.addData(category: 'ToGive', somme: somme, nom: nom, cause: cause);
-  }
   //TextField a donner
 
   final _formKey =GlobalKey<FormState>();
@@ -163,7 +170,7 @@ class _ADonnerState extends State<ADonner> {
               IconButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()){
-                      await saveData(provider: provider,somme: double.parse(somme.text),cause: cause.text,nom: nom.text);
+                      await _handleaddData(somme: double.parse(somme.text),cause: cause.text,nom: nom.text);
                       if (context.mounted){
                         context.pop(true);
                       }
@@ -192,6 +199,17 @@ class _ARecevoirState extends State<ARecevoir> {
 
   late TransactionsProvider provider;
 
+  Future<void> _handleaddData({required double somme,required String nom, required String cause}) async {
+    try {
+      await provider.addData(category: 'ToGet', somme: somme, nom: nom, cause: cause);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(
+            "Une erreur à eu lieu lors de l'ajout de la transaction")));
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -210,10 +228,6 @@ class _ARecevoirState extends State<ARecevoir> {
   }
 
   //TextField a Recevoir
-
-  Future<void> saveData({required TransactionsProvider provider,required double somme,required String nom,required String cause}) async {
-    await provider.addData(category: 'ToGet', somme: somme, nom: nom, cause: cause);
-  }
 
   final _formKey =GlobalKey<FormState>();
 
@@ -302,7 +316,7 @@ class _ARecevoirState extends State<ARecevoir> {
               IconButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()){
-                      await saveData(provider: provider,somme: double.parse(somme.text),cause: cause.text,nom: nom.text);
+                      await _handleaddData(somme: double.parse(somme.text),cause: cause.text,nom: nom.text);
                       if (context.mounted){
                         context.pop(true);
                       }

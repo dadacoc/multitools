@@ -44,8 +44,15 @@ class _EditTransactionState extends State<EditTransaction> {
   late TransactionsProvider provider;
 
 
-
-
+  Future<void> _handleEditData({required int id , required String nom , required double somme,required String cause}) async {
+    try {
+      await provider.editData(id: id, nom: nom, somme: somme, cause: cause);
+    }catch (e){
+      if (mounted){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Erreur lors de l'édit de la transaction")));
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -248,10 +255,12 @@ class _EditTransactionState extends State<EditTransaction> {
               child: const Text("Annuler"),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()){
-                  provider.editData(id: id, nom: nomController.text, somme: double.parse(sommeRestante.text), cause: causeController.text);
-                  context.go('/Transaction');
+                  await _handleEditData(id: id, nom: nom, somme: somme, cause: cause);
+                  if (context.mounted){
+                    context.go('/Transaction');
+                  }
                 }
               },
               child: const Text("Enregistrer"),
