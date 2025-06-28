@@ -303,7 +303,9 @@ class _CreateToDoState extends State<CreateToDo> {
                             if (_formKey.currentState!.validate()){
                               final categoryId = await provider.getCategoryId(category: categorie.text);
                               provider.addData(titre: titreTodo.text, note : note, categoryId: categoryId);
-                              context.go('/ToDoList');
+                              if (context.mounted) {
+                                context.go('/ToDoList');
+                              }
                             }
                           },
                           child: Row(

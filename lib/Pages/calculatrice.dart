@@ -110,9 +110,11 @@ class _CalculatriceState extends State<Calculatrice> {
         isLoading = false;
         data;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Echec de la mise à jour des données , veillez réessayer ultiérieurement'))
-      );
+      if (mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Echec de la mise à jour des données , veillez réessayer ultiérieurement'))
+        );
+      }
     }
   }
 
@@ -298,9 +300,11 @@ class _CalculatriceSettingsState extends State<CalculatriceSettings> {
         isLoading = false;
         data;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Echec de la mise à jour des données , veillez réessayer ultiérieurement'))
-      );
+      if (mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Echec de la mise à jour des données , veillez réessayer ultiérieurement'))
+        );
+      }
     }
   }
 

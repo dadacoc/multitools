@@ -21,7 +21,7 @@ class AddTransaction extends StatelessWidget {
             ElevatedButton(
                 onPressed: () async {
                   bool? add = await context.push('/Transaction/A_donner');
-                  if (add==true){
+                  if (add==true && context.mounted){
                     context.pop(true);
                   }
                 },
@@ -30,7 +30,7 @@ class AddTransaction extends StatelessWidget {
             ElevatedButton(
                 onPressed: () async {
                   bool? add = await context.push('/Transaction/A_recevoir');
-                  if (add==true){
+                  if (add==true && context.mounted){
                     context.pop(true);
                   }
                 },
@@ -164,7 +164,9 @@ class _ADonnerState extends State<ADonner> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()){
                       await saveData(provider: provider,somme: double.parse(somme.text),cause: cause.text,nom: nom.text);
-                      context.pop(true);
+                      if (context.mounted){
+                        context.pop(true);
+                      }
                     }
                   },
                   icon: Icon(Icons.add_circle_outline)
@@ -301,7 +303,9 @@ class _ARecevoirState extends State<ARecevoir> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()){
                       await saveData(provider: provider,somme: double.parse(somme.text),cause: cause.text,nom: nom.text);
-                      context.pop(true);
+                      if (context.mounted){
+                        context.pop(true);
+                      }
                     }
                   },
                   icon: Icon(Icons.add_circle_outline)
