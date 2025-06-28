@@ -31,7 +31,7 @@ class _CreateToDoState extends State<CreateToDo> {
   }
 
   Future<void> addData() async {
-    await provider.addData;
+    provider.addData;
   }
 
   final _formKey =GlobalKey<FormState>();

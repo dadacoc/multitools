@@ -61,7 +61,7 @@ class _EditTodoState extends State<EditTodo> {
   }
 
   Future<void> addData() async {
-    await provider.addData;
+    provider.addData;
   }
 
   final _formKey =GlobalKey<FormState>();

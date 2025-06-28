@@ -104,11 +104,11 @@ class TransactionsProvider extends ChangeNotifier {
   }
 
   Future<void> updateSomme(bool? value,int id,TextEditingController controller , double somme) async{
-    double value_controller = double.parse(controller.text);
+    double valueController = double.parse(controller.text);
     if (value==true){
-      controller.text = (value_controller+somme).toStringAsFixed(2);
+      controller.text = (valueController+somme).toStringAsFixed(2);
     }else {
-      controller.text = (value_controller-somme).toStringAsFixed(2);
+      controller.text = (valueController-somme).toStringAsFixed(2);
     }
     await updateStateCheck(value!, id);
     await loadData();
