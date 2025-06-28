@@ -1,4 +1,4 @@
-import 'package:MultiTools/Pages/Transaction/provider.dart';
+import 'package:multitools/Pages/Transaction/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -38,7 +38,7 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
 
   //Alert Dialog
 
-  Future<void> ShowText({nom,somme,cause,color}) async{
+  Future<void> showText({nom,somme,cause,color}) async{
     Color colortype = Colors.black;
 
     switch (color){
@@ -173,7 +173,7 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
                                             onSelected: (String choice) async {
                                               switch (choice) {
                                                 case ('Afficher plus'):
-                                                  await ShowText(nom: nom,somme: somme,cause: cause,color: "red");
+                                                  await showText(nom: nom,somme: somme,cause: cause,color: "red");
                                                   break;
                                                 case ('Delete'):
                                                   await provider.deleteData(checked,int.parse(id),provider.sommeTotalADonner,double.parse(somme));
@@ -286,7 +286,7 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
                                             onSelected: (String choice) async {
                                               switch (choice) {
                                                 case ('Afficher plus'):
-                                                  await ShowText(nom: nom,somme: somme,cause: cause,color: "green");
+                                                  await showText(nom: nom,somme: somme,cause: cause,color: "green");
                                                   break;
                                                 case ('Delete'):
                                                   await provider.deleteData(checked,int.parse(id),provider.sommeTotalARecevoir,double.parse(somme));

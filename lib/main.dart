@@ -1,7 +1,7 @@
-import 'package:MultiTools/Pages/To-Do/provider_todo.dart';
-import 'package:MultiTools/Pages/Transaction/provider.dart';
-import 'package:MultiTools/router.dart';
-import 'package:MultiTools/sqlite.dart';
+import 'package:multitools/Pages/To-Do/provider_todo.dart';
+import 'package:multitools/Pages/Transaction/provider.dart';
+import 'package:multitools/router.dart';
+import 'package:multitools/sqlite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +10,7 @@ import 'package:sqflite/sqflite.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  final database = await InitialisationDB();
+  final database = await initialisationDB();
   runApp(MyApp(database : database));
 }
 class MyApp extends StatelessWidget {

@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:MultiTools/main.dart';
+import 'package:multitools/main.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:mockito/mockito.dart';
 

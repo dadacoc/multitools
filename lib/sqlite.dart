@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-Future<Database> InitialisationDB() async {
+Future<Database> initialisationDB() async {
   String path = join(await getDatabasesPath(), 'multitools.db');
   Database db = await openDatabase(
     path,
@@ -54,11 +54,11 @@ Future<Database> InitialisationDB() async {
     },
   );
   //On verifie si les tables existes tous :
-    await _CreatedTableIfNotExist(db);
+    await _createdTableIfNotExist(db);
     return db;
 }
 
-Future<void> _CreatedTableIfNotExist(Database db) async {
+Future<void> _createdTableIfNotExist(Database db) async {
   // Créez la table 'calculatrice' si elle n'existe pas
   await db.execute(
     '''

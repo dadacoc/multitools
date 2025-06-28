@@ -1,6 +1,6 @@
-import 'package:MultiTools/Pages/To-Do/provider_todo.dart';
-import 'package:MultiTools/Pages/To-Do/category_option.dart';
-import 'package:MultiTools/colors.dart';
+import 'package:multitools/Pages/To-Do/provider_todo.dart';
+import 'package:multitools/Pages/To-Do/category_option.dart';
+import 'package:multitools/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -302,7 +302,7 @@ class _CreateToDoState extends State<CreateToDo> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()){
                               final categoryId = await provider.getCategoryId(category: categorie.text);
-                              provider.addData(titre: titreTodo.text, note : note, category_id: categoryId);
+                              provider.addData(titre: titreTodo.text, note : note, categoryId: categoryId);
                               context.go('/ToDoList');
                             }
                           },

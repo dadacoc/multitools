@@ -119,12 +119,12 @@ class TodoProvider extends ChangeNotifier {
   }
 
 
-  Future<void> addData({required String titre, required String note , required int category_id}) async {
+  Future<void> addData({required String titre, required String note , required int categoryId}) async {
     await database.insert(
         'ToDo_main', {
           'titre' : titre,
           'note' : note,
-          'category_id' : category_id,
+          'category_id' : categoryId,
           'checked' : 0
     }
     );
