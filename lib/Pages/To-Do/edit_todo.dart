@@ -60,8 +60,24 @@ class _EditTodoState extends State<EditTodo> {
     titreTodo.text = titre;
   }
 
-  Future<void> addData() async {
-    provider.addData;
+  void _showErrorSnackbar(String message){
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
+  Future<void> _handleUpdateData({required String titre , required String note,required int id,required categoryId}) async {
+    final provider = Provider.of<TodoProvider>(context,listen: false);
+    try {
+      await provider.updateData(titre: titre, note: note, id: id, categoryId: categoryId);
+    }catch (e){
+      _showErrorSnackbar("Erreur lors de la mise à jour de la tâche");
+    }
+    try {
+      await provider.loadData();
+    }catch (e){
+      _showErrorSnackbar("Erreur durant le raffraichissement des données, tentez de relancer la page");
+    }
   }
 
   final _formKey =GlobalKey<FormState>();
@@ -326,8 +342,14 @@ class _EditTodoState extends State<EditTodo> {
                     ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()){
-                            final categoryId = await provider.getCategoryId(category: categorie.text);
-                            provider.updateData(titre: titreTodo.text, note: note, id: id,categoryId: categoryId);
+                            int? categoryId;
+                            try {
+                              categoryId = await provider.getCategoryId(category: categorie.text);
+                            } catch (e) {
+                              _showErrorSnackbar("Erreur , la category '${categorie.text}' n'a pas été trouvé");
+                              return;
+                            }
+                            await _handleUpdateData(titre: titreTodo.text, note: note, id: id,categoryId: categoryId);
                             if (context.mounted){
                               if (returnTodoEdit){
                                 todo['note'] = note;

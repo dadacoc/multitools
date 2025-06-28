@@ -2,6 +2,29 @@ import 'package:multitools/Pages/To-Do/provider_todo.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+void _showErrorSnackbar(String message,BuildContext context){
+  if (context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+Future<void> _handleDeleteCategory({required int id,required bool supprimerTaches,required BuildContext context}) async {
+  final provider = Provider.of<TodoProvider>(context,listen: false);
+  try {
+    await provider.deleteCategorie(id: id, supprimerTaches: supprimerTaches);
+  }catch (e){
+    if (context.mounted){
+      _showErrorSnackbar("Erreur lors de la suppression de la Category",context);
+    }
+  }
+  try {
+    await provider.loadData();
+  }catch (e){
+    if (context.mounted) {
+      _showErrorSnackbar("Erreur durant le raffraichissement des données, tentez de relancer la page",context);
+    }
+  }
+}
 
 Future<void> afficherPlusCateogie(BuildContext context,String nom,String colorString,Color color) async {
   return showDialog(
@@ -92,7 +115,6 @@ Future<void> deleteCategory(BuildContext context, int id,String name) async {
 }
 
 Future<void> confirmationDeleteCategory(BuildContext context,int id,String name, bool supprimerTaches)async {
-  TodoProvider provider = Provider.of<TodoProvider>(context , listen: false);
   return showDialog(
       context: context,
       barrierDismissible: false,
@@ -113,7 +135,7 @@ Future<void> confirmationDeleteCategory(BuildContext context,int id,String name,
             TextButton(
                 onPressed: () async {
                   Navigator.pop(context);
-                  await provider.deleteCategorie(id: id, supprimerTaches: supprimerTaches);
+                  await _handleDeleteCategory(id: id, supprimerTaches: supprimerTaches,context: context);
                 },
                 child: Text("Valider")),
             TextButton(onPressed: ()=>Navigator.pop(context), child: Text("Annuler"))
