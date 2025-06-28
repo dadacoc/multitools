@@ -101,16 +101,13 @@ class TransactionsProvider extends ChangeNotifier {
       }
     }
 
-  Future<void> deleteData(bool value,int id,TextEditingController controller,double somme) async {
+  Future<void> deleteData(int id) async {
     try {
       await database.delete(
           'Transaction_main',
           where: 'id = ?',
           whereArgs: [id]
       );
-      if (value){
-        controller.text = (double.parse(controller.text) - somme).toStringAsFixed(2);
-      }
     }catch (e, s) {
       logger.e("Erreur lors de la suppression de la donnée id: $id", error: e, stackTrace: s);
       rethrow;

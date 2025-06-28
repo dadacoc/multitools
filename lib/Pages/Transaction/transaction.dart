@@ -75,6 +75,34 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
     );
   }
 
+  //Gestion des erreurs
+  void _showErrorSnackbar(String message){
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
+  Future<void> _handleDeleteTransaction(int id) async{
+    final provider = Provider.of<TransactionsProvider>(context, listen: false); // Pas besoin d'écouter ici
+    bool deleteSucceeded = false;
+    try {
+      await provider.deleteData(id);
+      deleteSucceeded = true;
+    }catch (e) {
+      _showErrorSnackbar("Erreur : La suppression a échoué. ");
+    }
+
+    //Rechargement des données
+    if (deleteSucceeded){
+      try {
+        await provider.loadData();
+      }catch (e){
+        _showErrorSnackbar("Erreur : un problème est survenu lors du raffraichissement de la liste , tentez de relancer la page");
+      }
+    }
+
+  }
+
   late final TabController _tabController;
 
   @override
@@ -180,14 +208,7 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
                                                   await showText(nom: nom,somme: somme,cause: cause,color: "red");
                                                   break;
                                                 case ('Delete'):
-                                                  try {
-                                                    await provider.deleteData(checked,int.parse(id),provider.sommeTotalADonner,double.parse(somme));
-                                                    await provider.loadData();
-                                                  } catch(e){
-                                                    if (context.mounted){
-                                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Une erreur à eu lieu lors de la suppression de la transaction, tentez de relancer la page")));
-                                                    }
-                                                  }
+                                                  await _handleDeleteTransaction(int.parse(id));
                                                   break;
                                                 case ('Edit'):
                                                   context.go('/Transaction/Edit',
@@ -300,13 +321,7 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
                                                   await showText(nom: nom,somme: somme,cause: cause,color: "green");
                                                   break;
                                                 case ('Delete'):
-                                                  try {
-                                                    await provider.deleteData(checked,int.parse(id),provider.sommeTotalARecevoir,double.parse(somme));
-                                                  }catch(e){
-                                                    if (context.mounted){
-                                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Une erreur à eu lieu dans la suppression de la transaction")));
-                                                    }
-                                                  }
+                                                    await _handleDeleteTransaction(int.parse(id));
                                                   break;
                                                 case ('Edit'):
                                                   context.go('/Transaction/Edit',
