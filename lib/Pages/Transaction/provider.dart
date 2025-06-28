@@ -118,13 +118,18 @@ class TransactionsProvider extends ChangeNotifier {
   }
 
   Future<void> updateStateCheck(bool value,int id) async {
-    await database.update(
-      'Transaction_main',
-      {'checked': value ? 1 : 0}, // Convertit le booléen en 0/1
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
+    try {
+      await database.update(
+        'Transaction_main',
+        {'checked': value ? 1 : 0}, // Convertit le booléen en 0/1
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+      }catch (e,s){
+      logger.e("Un problème à eu lieu lors du updateStateCheck id: $id",error: e,stackTrace: s);
+      rethrow;
+    }
+    }
 
   Future<void> updateSomme(bool? value,int id,TextEditingController controller , double somme) async{
     double valueController = double.parse(controller.text);
@@ -142,32 +147,41 @@ class TransactionsProvider extends ChangeNotifier {
   //Ajout :
 
   Future<void> addData({required String category,required double somme,required String nom, required String cause}) async {
-    await database.insert(
-        'Transaction_main',{
-      'category' : category,
-      'somme' : somme,
-      'nom' : nom,
-      'cause' : cause
+    try {
+      await database.insert(
+          'Transaction_main',{
+        'category' : category,
+        'somme' : somme,
+        'nom' : nom,
+        'cause' : cause
+      }
+      );
+    } catch (e,s){
+      logger.e("Une erreur a eu lieu lors du addData ",error: e,stackTrace: s);
+      rethrow;
     }
-    );
     await loadData();
   }
 
   //Edit
 
   Future<void> editData({required int id , required String nom , required double somme,required String cause})async {
-    await database.update(
-      'Transaction_main',
-      {
-        'nom' : nom,
-        'somme' : somme,
-        'cause' : cause
-      },
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    try {
+      await database.update(
+        'Transaction_main',
+        {
+          'nom' : nom,
+          'somme' : somme,
+          'cause' : cause
+        },
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+    }catch (e,s) {
+      logger.e("Une erreur a eu lieu lors de editData , id: $id",error: e,stackTrace: s);
+      rethrow;
+    }
     await loadData();
   }
-
 
 }
