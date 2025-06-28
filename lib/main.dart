@@ -1,5 +1,5 @@
-import 'package:MultiTools/Pages/To-Do/ProviderToDo.dart';
-import 'package:MultiTools/Pages/Transaction/Provider.dart';
+import 'package:MultiTools/Pages/To-Do/provider_todo.dart';
+import 'package:MultiTools/Pages/Transaction/provider.dart';
 import 'package:MultiTools/router.dart';
 import 'package:MultiTools/sqlite.dart';
 import 'package:flutter/material.dart';
