@@ -9,9 +9,10 @@ final logger = Logger(
 
 class TransactionsProvider extends ChangeNotifier {
 
-  //Controller
-  late TextEditingController sommeTotalADonner;
-  late TextEditingController sommeTotalARecevoir ;
+
+  //Variable
+  double totalToGive = 0.0;
+  double totalToGet = 0.0;
 
   //Data
 
@@ -92,8 +93,8 @@ class TransactionsProvider extends ChangeNotifier {
       for (var item in getCheckGet){
         totalGet+= item['somme'];
       }
-      sommeTotalADonner = TextEditingController(text: totalGive.toStringAsFixed(2));
-      sommeTotalARecevoir = TextEditingController(text: totalGet.toStringAsFixed(2));
+      totalToGive = totalGive;
+      totalToGet = totalGet;
 
       }catch (e, s) {
       logger.e("Erreur lors du calcul de la somme totale", error: e, stackTrace: s);
@@ -128,17 +129,6 @@ class TransactionsProvider extends ChangeNotifier {
     }
     }
 
-  Future<void> updateSomme(bool? value,int id,TextEditingController controller , double somme) async{
-    double valueController = double.parse(controller.text);
-    if (value==true){
-      controller.text = (valueController+somme).toStringAsFixed(2);
-    }else {
-      controller.text = (valueController-somme).toStringAsFixed(2);
-    }
-    await updateStateCheck(value!, id);
-    await loadData();
-
-  }
 
 
   //Ajout :
@@ -157,7 +147,6 @@ class TransactionsProvider extends ChangeNotifier {
       logger.e("Une erreur a eu lieu lors du addData ",error: e,stackTrace: s);
       rethrow;
     }
-    await loadData();
   }
 
   //Edit
@@ -178,7 +167,6 @@ class TransactionsProvider extends ChangeNotifier {
       logger.e("Une erreur a eu lieu lors de editData , id: $id",error: e,stackTrace: s);
       rethrow;
     }
-    await loadData();
   }
 
 }

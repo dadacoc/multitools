@@ -62,6 +62,14 @@ class _ADonnerState extends State<ADonner> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Une erreur à eu lieu lors de l'ajout de la transaction")));
       }
     }
+    try {
+      await provider.loadData();
+    }catch (e){
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(
+            "Une erreur à eu lieu lors du raffraichissement de la page , tentez de la relancer")));
+      }
+    }
   }
 
   @override
@@ -206,6 +214,14 @@ class _ARecevoirState extends State<ARecevoir> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(
             "Une erreur à eu lieu lors de l'ajout de la transaction")));
+      }
+    }
+    try {
+      await provider.loadData();
+    }catch (e){
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(
+            "Une erreur à eu lieu lors du raffraichissement de la page , tentez de la relancer")));
       }
     }
   }

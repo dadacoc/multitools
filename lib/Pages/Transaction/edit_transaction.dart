@@ -52,6 +52,14 @@ class _EditTransactionState extends State<EditTransaction> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Erreur lors de l'édit de la transaction")));
       }
     }
+    try {
+      await provider.loadData();
+    }catch (e){
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(
+            "Une erreur à eu lieu lors du raffraichissement de la page , tentez de la relancer")));
+      }
+    }
   }
 
   @override

@@ -113,12 +113,31 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
     }
   }
 
+  Future<void> _handleCheckboxChanged(int id, bool newValue) async {
+    TransactionsProvider provider = Provider.of<TransactionsProvider>(context,listen: false);
+
+    try {
+      await provider.updateStateCheck(newValue, id);
+    }catch (e) {
+      _showErrorSnackbar("Erreur lors du changement de l'état de la transaction");
+    }
+    try {
+      await provider.loadData();
+    }catch (e) {
+      _showErrorSnackbar("Erreur lors de la mise à jour de la page , tentez de la relancer");
+    }
+  }
+
 
   late final TabController _tabController;
+  late TextEditingController sommeTotalADonner;
+  late TextEditingController sommeTotalARecevoir;
 
   @override
   void initState() {
     super.initState();
+    sommeTotalADonner = TextEditingController();
+    sommeTotalARecevoir = TextEditingController();
     _tabController = TabController(length: 2, vsync: this);
     final provider = Provider.of<TransactionsProvider>(context, listen: false); // Pas besoin d'écouter ici
     provider.loadData().catchError((e) {
@@ -132,13 +151,13 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
   void dispose() {
     super.dispose();
     _tabController.dispose();
+    sommeTotalARecevoir.dispose();
+    sommeTotalADonner.dispose();
   }
 
 
   @override
   Widget build(BuildContext context) {
-
-    final provider = Provider.of<TransactionsProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -153,132 +172,19 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
             ]
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: TabBarView(
-                controller: _tabController,
-                children: <Widget>[
-                  (provider.toGive.isEmpty)
-                      ? const Center(
-                    child: Text("Aucune données de transaction n'a été enregister"),
-                  )
-                      : Column(
-                    children: [
-                      SizedBox(height: 16,),
-                      SizedBox(
-                          height: 120,
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              label: Text('Somme total selectionner :'),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(10))
-                              ),
-                              suffix: Text("€"),
-                            ),
-                            style: const TextStyle(fontSize: 50),
-                            readOnly: true,
-                            textAlign: TextAlign.center,
-                            controller: provider.sommeTotalADonner,
-
-                          )
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                            padding: EdgeInsets.only(bottom: 50),
-                            itemCount: provider.toGive.length,
-                            itemBuilder: (BuildContext context , int index) {
-                                  final transaction = provider.toGive[index];
-                                  final nom = transaction['nom'].toString();
-                                  final somme = transaction['somme'].toString();
-                                  final cause = transaction['cause'].toString();
-                                  final id = transaction['id'].toString();
-                                  final checked = transaction['checked']==1; //Remplace le 1 par true et inversement
-
-                                  return Card(
-                                    child: ListTile(
-                                        leading:
-                                        Checkbox(
-                                          onChanged: (bool? value) async {
-                                            await provider.updateSomme(value,int.parse(id),provider.sommeTotalADonner, double.parse(somme));
-                                          },
-                                          value: checked,
-                                        ),
-                                        title: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(nom,style: const TextStyle(fontWeight: FontWeight.bold),maxLines: 1, overflow: TextOverflow.ellipsis,),
-                                              Text("${(double.parse(somme)).toStringAsFixed(2)} €", style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),maxLines: 1, overflow: TextOverflow.ellipsis,)
-                                            ]
-                                        ),
-                                        subtitle: Text("Cause : $cause",style: const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),maxLines: 2, overflow: TextOverflow.ellipsis,),
-                                        trailing: PopupMenuButton<String>(
-                                            onSelected: (String choice) async {
-                                              switch (choice) {
-                                                case ('Afficher plus'):
-                                                  await showText(nom: nom,somme: somme,cause: cause,color: "red");
-                                                  break;
-                                                case ('Delete'):
-                                                  await _handleDeleteTransaction(int.parse(id));
-                                                  break;
-                                                case ('Edit'):
-                                                  context.go('/Transaction/Edit',
-                                                      extra : {
-                                                        'id': int.parse(id),
-                                                        'nom': nom,
-                                                        'somme': double.parse(somme),
-                                                        'cause': cause
-                                                    }
-                                                  );
-                                              }
-                                            },
-                                            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                                              const PopupMenuItem(
-                                                value: 'Afficher plus',
-                                                child: Row(
-                                                    children: [
-                                                      Text('Afficher plus')
-                                                    ]
-                                                ),
-                                              ),
-                                              const PopupMenuDivider(),
-                                              const PopupMenuItem(
-                                                  value: 'Edit',
-                                                  child: Row(
-                                                    children: [
-                                                      Text("Edit"),
-                                                      SizedBox(width: 8,),
-                                                      Icon(Icons.edit)
-                                                    ],
-                                                  )
-                                              ),
-                                              const PopupMenuDivider(),
-
-                                              const PopupMenuItem(
-                                                  value: 'Delete',
-                                                  child: Row(
-                                                      children: [
-                                                        Text('Delete',style: TextStyle(color: Colors.redAccent),),
-                                                        SizedBox(width: 8,),
-                                                        Icon(Icons.delete,color: Colors.redAccent,)
-                                                      ]
-                                                  )
-                                              ),
-                                            ]
-                                        )
-                                    ),
-                                  );
-                            }
-                        ),
-                      ),
-                    ],
-                  ),
-                  provider.toGet.isEmpty
-                      ? const Center(
-                    child: Text("Aucune données de transaction n'a été enregister"),
-                  )
-                      : Center(
-                      child: Column(
+      body: Consumer<TransactionsProvider>(
+        builder:(context,provider,child) {
+          sommeTotalADonner.text = provider.totalToGive.toStringAsFixed(2);
+          sommeTotalARecevoir.text = provider.totalToGet.toStringAsFixed(2);
+          return TabBarView(
+                    controller: _tabController,
+                    children: <Widget>[
+                      (provider.toGive.isEmpty)
+                          ? const Center(
+                        child: Text(
+                            "Aucune données de transaction n'a été enregister"),
+                      )
+                          : Column(
                         children: [
                           SizedBox(height: 16,),
                           SizedBox(
@@ -287,65 +193,96 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
                                 decoration: const InputDecoration(
                                   label: Text('Somme total selectionner :'),
                                   border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(10))
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))
                                   ),
                                   suffix: Text("€"),
                                 ),
                                 style: const TextStyle(fontSize: 50),
                                 readOnly: true,
                                 textAlign: TextAlign.center,
-                                controller: provider.sommeTotalARecevoir,
+                                controller: sommeTotalADonner,
+
                               )
                           ),
                           Expanded(
                             child: ListView.builder(
                                 padding: EdgeInsets.only(bottom: 50),
-                                itemCount: provider.toGet.length,
-                                itemBuilder: (BuildContext context , int index) {
-                                  final nom = provider.toGet[index]['nom'].toString();
-                                  final somme = provider.toGet[index]['somme'].toString();
-                                  final cause = provider.toGet[index]['cause'].toString();
-                                  final id = provider.toGet[index]['id'].toString();
-                                  final checked = provider.toGet[index]['checked']==1; //Remplace le 1 par true et inversement
-
+                                itemCount: provider.toGive.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final transaction = provider.toGive[index];
+                                  final nom = transaction['nom'].toString();
+                                  final somme = transaction['somme'].toString();
+                                  final cause = transaction['cause'].toString();
+                                  final id = transaction['id'].toString();
+                                  final checked = transaction['checked'] ==
+                                      1; //Remplace le 1 par true et inversement
 
                                   return Card(
                                     child: ListTile(
                                         leading:
-                                        Checkbox(value: checked,
-                                            onChanged: (bool? value) async {
-                                              await provider.updateSomme(value,int.parse(id),provider.sommeTotalARecevoir, double.parse(somme));
-                                            }
+                                        Checkbox(
+                                          onChanged: (bool? value) async {
+                                            await _handleCheckboxChanged(
+                                                int.parse(id), value!);
+                                          },
+                                          value: checked,
                                         ),
                                         title: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment
+                                                .start,
                                             children: [
-                                              Text(nom,style: const TextStyle(fontWeight: FontWeight.bold),maxLines: 1, overflow: TextOverflow.ellipsis,),
-                                              Text("${(double.parse(somme)).toStringAsFixed(2)} €", style: const TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold),maxLines: 1, overflow: TextOverflow.ellipsis,)
+                                              Text(nom, style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                                maxLines: 1,
+                                                overflow: TextOverflow
+                                                    .ellipsis,),
+                                              Text("${(double.parse(somme))
+                                                  .toStringAsFixed(2)} €",
+                                                style: const TextStyle(
+                                                    color: Colors.redAccent,
+                                                    fontWeight: FontWeight
+                                                        .bold),
+                                                maxLines: 1,
+                                                overflow: TextOverflow
+                                                    .ellipsis,)
                                             ]
                                         ),
-                                        subtitle: Text("Cause : $cause",style: const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                        subtitle: Text("Cause : $cause",
+                                          style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontStyle: FontStyle.italic),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,),
                                         trailing: PopupMenuButton<String>(
                                             onSelected: (String choice) async {
                                               switch (choice) {
                                                 case ('Afficher plus'):
-                                                  await showText(nom: nom,somme: somme,cause: cause,color: "green");
+                                                  await showText(nom: nom,
+                                                      somme: somme,
+                                                      cause: cause,
+                                                      color: "red");
                                                   break;
                                                 case ('Delete'):
-                                                    await _handleDeleteTransaction(int.parse(id));
+                                                  await _handleDeleteTransaction(
+                                                      int.parse(id));
                                                   break;
                                                 case ('Edit'):
-                                                  context.go('/Transaction/Edit',
-                                                      extra : {
+                                                  context.go(
+                                                      '/Transaction/Edit',
+                                                      extra: {
                                                         'id': int.parse(id),
                                                         'nom': nom,
-                                                        'somme': double.parse(somme),
+                                                        'somme': double.parse(
+                                                            somme),
                                                         'cause': cause
                                                       }
                                                   );
                                               }
                                             },
-                                            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                                            itemBuilder: (
+                                                BuildContext context) =>
+                                            <PopupMenuEntry<String>>[
                                               const PopupMenuItem(
                                                 value: 'Afficher plus',
                                                 child: Row(
@@ -371,9 +308,14 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
                                                   value: 'Delete',
                                                   child: Row(
                                                       children: [
-                                                        Text('Delete',style: TextStyle(color: Colors.redAccent),),
+                                                        Text('Delete',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .redAccent),),
                                                         SizedBox(width: 8,),
-                                                        Icon(Icons.delete,color: Colors.redAccent,)
+                                                        Icon(Icons.delete,
+                                                          color: Colors
+                                                              .redAccent,)
                                                       ]
                                                   )
                                               ),
@@ -385,12 +327,170 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
                             ),
                           ),
                         ],
+                      ),
+                      provider.toGet.isEmpty
+                          ? const Center(
+                        child: Text(
+                            "Aucune données de transaction n'a été enregister"),
                       )
-                  ),
-                ]
-            ),
-          ),
-        ],
+                          : Center(
+                          child: Column(
+                            children: [
+                              SizedBox(height: 16,),
+                              SizedBox(
+                                  height: 120,
+                                  child: TextField(
+                                      decoration: const InputDecoration(
+                                        label: Text(
+                                            'Somme total selectionner :'),
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))
+                                        ),
+                                        suffix: Text("€"),
+                                      ),
+                                      style: const TextStyle(fontSize: 50),
+                                      readOnly: true,
+                                      textAlign: TextAlign.center,
+                                      controller: sommeTotalARecevoir
+                                  )
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                    padding: EdgeInsets.only(bottom: 50),
+                                    itemCount: provider.toGet.length,
+                                    itemBuilder: (BuildContext context,
+                                        int index) {
+                                      final nom = provider.toGet[index]['nom']
+                                          .toString();
+                                      final somme = provider
+                                          .toGet[index]['somme'].toString();
+                                      final cause = provider
+                                          .toGet[index]['cause'].toString();
+                                      final id = provider.toGet[index]['id']
+                                          .toString();
+                                      final checked = provider
+                                          .toGet[index]['checked'] ==
+                                          1; //Remplace le 1 par true et inversement
+
+
+                                      return Card(
+                                        child: ListTile(
+                                            leading:
+                                            Checkbox(value: checked,
+                                                onChanged: (bool? value) async {
+                                                  await _handleCheckboxChanged(
+                                                      int.parse(id), value!);
+                                                }
+                                            ),
+                                            title: Column(
+                                                crossAxisAlignment: CrossAxisAlignment
+                                                    .start,
+                                                children: [
+                                                  Text(nom,
+                                                    style: const TextStyle(
+                                                        fontWeight: FontWeight
+                                                            .bold),
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow
+                                                        .ellipsis,),
+                                                  Text("${(double.parse(somme))
+                                                      .toStringAsFixed(2)} €",
+                                                    style: const TextStyle(
+                                                        color: Colors
+                                                            .greenAccent,
+                                                        fontWeight: FontWeight
+                                                            .bold),
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow
+                                                        .ellipsis,)
+                                                ]
+                                            ),
+                                            subtitle: Text("Cause : $cause",
+                                              style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontStyle: FontStyle.italic),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,),
+                                            trailing: PopupMenuButton<String>(
+                                                onSelected: (
+                                                    String choice) async {
+                                                  switch (choice) {
+                                                    case ('Afficher plus'):
+                                                      await showText(nom: nom,
+                                                          somme: somme,
+                                                          cause: cause,
+                                                          color: "green");
+                                                      break;
+                                                    case ('Delete'):
+                                                      await _handleDeleteTransaction(
+                                                          int.parse(id));
+                                                      break;
+                                                    case ('Edit'):
+                                                      context.go(
+                                                          '/Transaction/Edit',
+                                                          extra: {
+                                                            'id': int.parse(id),
+                                                            'nom': nom,
+                                                            'somme': double
+                                                                .parse(somme),
+                                                            'cause': cause
+                                                          }
+                                                      );
+                                                  }
+                                                },
+                                                itemBuilder: (
+                                                    BuildContext context) =>
+                                                <PopupMenuEntry<String>>[
+                                                  const PopupMenuItem(
+                                                    value: 'Afficher plus',
+                                                    child: Row(
+                                                        children: [
+                                                          Text('Afficher plus')
+                                                        ]
+                                                    ),
+                                                  ),
+                                                  const PopupMenuDivider(),
+                                                  const PopupMenuItem(
+                                                      value: 'Edit',
+                                                      child: Row(
+                                                        children: [
+                                                          Text("Edit"),
+                                                          SizedBox(width: 8,),
+                                                          Icon(Icons.edit)
+                                                        ],
+                                                      )
+                                                  ),
+                                                  const PopupMenuDivider(),
+
+                                                  const PopupMenuItem(
+                                                      value: 'Delete',
+                                                      child: Row(
+                                                          children: [
+                                                            Text('Delete',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .redAccent),),
+                                                            SizedBox(width: 8,),
+                                                            Icon(Icons.delete,
+                                                              color: Colors
+                                                                  .redAccent,)
+                                                          ]
+                                                      )
+                                                  ),
+                                                ]
+                                            )
+                                        ),
+                                      );
+                                    }
+                                ),
+                              ),
+                            ],
+                          ),
+                      ),
+                    ],
+          );
+        }
       ),
       floatingActionButton: SizedBox(
         width: 55,
