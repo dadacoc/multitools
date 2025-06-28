@@ -41,6 +41,7 @@ dependencies:
   path: ^1.9.1
   flutter_launcher_icons: ^0.14.3
   rename_app: ^1.6.2
+  logger: ^2.3.0
 
 dev_dependencies:
   flutter_test:

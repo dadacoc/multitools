@@ -14,7 +14,7 @@ class TodoProvider extends ChangeNotifier {
   TodoProvider({required this.database});
 
 
-  Future<void> loadData({needReloadCategories=false}) async {
+  Future<void> loadData({bool needReloadCategories=false}) async {
     //data = await database.query('ToDo_main');
 
     if (needReloadCategories){

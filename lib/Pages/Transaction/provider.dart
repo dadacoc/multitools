@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:flutter/foundation.dart';
+import 'package:logger/logger.dart';
 
+final logger = Logger(
+  level: kReleaseMode ? Level.off : Level.debug
+);
 
 class TransactionsProvider extends ChangeNotifier {
 
@@ -18,13 +23,15 @@ class TransactionsProvider extends ChangeNotifier {
   TransactionsProvider(this.database);
 
   Future<void> loadData() async {
-    data = await database.query('Transaction_main');
-    await loadToGive();
-    await loadToGet();
-    await loadSommeTotal();
-
-    notifyListeners();
-
+    try {
+      data = await database.query('Transaction_main');
+      await loadToGive();
+      await loadToGet();
+      await loadSommeTotal();
+      notifyListeners();
+    } catch (e){
+      rethrow;
+    }
   }
 
   Future<void> loadToGive() async {
@@ -34,9 +41,14 @@ class TransactionsProvider extends ChangeNotifier {
           where: 'category = ?',
           whereArgs: ['ToGive']
       );
-    }catch (e){
-      print("Une exception est lever : $e");
+    }catch (e,s) {
+      logger.e(
+          "Une erreur est survenue lors du chargement de 'ToGive",
+          error: e,
+          stackTrace: s
+      );
       toGive =[];
+      rethrow;
     }
   }
 
@@ -47,36 +59,47 @@ class TransactionsProvider extends ChangeNotifier {
           where: 'category = ?',
           whereArgs: ['ToGet']
       );
-    }catch (e) {
-      print("Une exception est lever : $e");
+    }catch (e,s) {
+      logger.e(
+        "Une erreur est survenue lors du chargement de 'ToGet",
+        error: e,
+        stackTrace: s
+      );
       toGet =[];
+      rethrow;
     }
   }
 
   Future<void> loadSommeTotal() async {
-    List<Map<String,dynamic>> getCheckGive = await database.query(
-        'Transaction_main',
-        where: 'category = ? AND checked = ?',
-        whereArgs: ['ToGive', 1]
-    );
-    List<Map<String,dynamic>> getCheckGet = await database.query(
-        'Transaction_main',
-        where: 'category = ? AND checked = ?',
-        whereArgs: ['ToGet', 1]
-    );
-    double totalGive = 0.0;
-    double totalGet = 0.0;
+    try {
+      List<Map<String,dynamic>> getCheckGive = await database.query(
+          'Transaction_main',
+          where: 'category = ? AND checked = ?',
+          whereArgs: ['ToGive', 1]
+      );
+      List<Map<String,dynamic>> getCheckGet = await database.query(
+          'Transaction_main',
+          where: 'category = ? AND checked = ?',
+          whereArgs: ['ToGet', 1]
+      );
+      double totalGive = 0.0;
+      double totalGet = 0.0;
 
-    for (var item in getCheckGive){
-      totalGive+= item['somme'];
-    }
+      for (var item in getCheckGive){
+        totalGive+= item['somme'];
+      }
 
-    for (var item in getCheckGet){
-      totalGet+= item['somme'];
+      for (var item in getCheckGet){
+        totalGet+= item['somme'];
+      }
+      sommeTotalADonner = TextEditingController(text: totalGive.toStringAsFixed(2));
+      sommeTotalARecevoir = TextEditingController(text: totalGet.toStringAsFixed(2));
+
+      }catch (e, s) {
+      logger.e("Erreur lors du calcul de la somme totale", error: e, stackTrace: s);
+      rethrow;
+      }
     }
-    sommeTotalADonner = TextEditingController(text: totalGive.toStringAsFixed(2));
-    sommeTotalARecevoir = TextEditingController(text: totalGet.toStringAsFixed(2));
-  }
 
   Future<void> deleteData(bool value,int id,TextEditingController controller,double somme) async {
     try {
@@ -88,10 +111,10 @@ class TransactionsProvider extends ChangeNotifier {
       if (value){
         controller.text = (double.parse(controller.text) - somme).toStringAsFixed(2);
       }
-    }catch (e){
-      print("Une erreur est survenu : $e");
+    }catch (e, s) {
+      logger.e("Erreur lors de la suppression de la donnée id: $id", error: e, stackTrace: s);
+      rethrow;
     }
-    await loadData();
   }
 
   Future<void> updateStateCheck(bool value,int id) async {

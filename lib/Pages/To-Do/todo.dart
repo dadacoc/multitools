@@ -153,7 +153,6 @@ class _ToDoState extends State<ToDo> {
                     children: todos.map<Widget>((todo){
                       final id = todo['id'];
                       final titre = todo['titre'];
-                      final note = todo['note'];
                       final checked = todo['checked']==1;
 
                       return ListTile(

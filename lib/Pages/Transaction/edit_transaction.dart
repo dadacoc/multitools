@@ -252,8 +252,6 @@ class _EditTransactionState extends State<EditTransaction> {
                 if (_formKey.currentState!.validate()){
                   provider.editData(id: id, nom: nomController.text, somme: double.parse(sommeRestante.text), cause: causeController.text);
                   context.go('/Transaction');
-                }else {
-                  print("Formulaire invalide");
                 }
               },
               child: const Text("Enregistrer"),

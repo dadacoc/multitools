@@ -38,7 +38,7 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
 
   //Alert Dialog
 
-  Future<void> showText({nom,somme,cause,color}) async{
+  Future<void> showText({required String nom, required String somme,required String cause,required String color}) async{
     Color colortype = Colors.black;
 
     switch (color){
@@ -82,7 +82,11 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     final provider = Provider.of<TransactionsProvider>(context, listen: false); // Pas besoin d'écouter ici
-    provider.loadData(); // Charge les données une seule fois
+    provider.loadData().catchError((e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Un problème est survenu lors du chargement des données")));
+      } // Charge les données une seule fois
+      });
   }
 
   @override
@@ -176,7 +180,14 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
                                                   await showText(nom: nom,somme: somme,cause: cause,color: "red");
                                                   break;
                                                 case ('Delete'):
-                                                  await provider.deleteData(checked,int.parse(id),provider.sommeTotalADonner,double.parse(somme));
+                                                  try {
+                                                    await provider.deleteData(checked,int.parse(id),provider.sommeTotalADonner,double.parse(somme));
+                                                    await provider.loadData();
+                                                  } catch(e){
+                                                    if (context.mounted){
+                                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Une erreur à eu lieu lors de la suppression de la transaction, tentez de relancer la page")));
+                                                    }
+                                                  }
                                                   break;
                                                 case ('Edit'):
                                                   context.go('/Transaction/Edit',
@@ -289,7 +300,13 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
                                                   await showText(nom: nom,somme: somme,cause: cause,color: "green");
                                                   break;
                                                 case ('Delete'):
-                                                  await provider.deleteData(checked,int.parse(id),provider.sommeTotalARecevoir,double.parse(somme));
+                                                  try {
+                                                    await provider.deleteData(checked,int.parse(id),provider.sommeTotalARecevoir,double.parse(somme));
+                                                  }catch(e){
+                                                    if (context.mounted){
+                                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Une erreur à eu lieu dans la suppression de la transaction")));
+                                                    }
+                                                  }
                                                   break;
                                                 case ('Edit'):
                                                   context.go('/Transaction/Edit',
@@ -356,7 +373,15 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
           onPressed: () async {
             bool? add = await context.push('/Transaction/AddTransaction');
             if (add==true){
-              provider.loadData();
+              try {
+                await provider.loadData();
+              }catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text(
+                          "Un problème est survenu lors du chargement des données")));
+                }
+              }
             }
           },
           child: Icon(Icons.add),
