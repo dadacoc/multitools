@@ -43,15 +43,6 @@ class _ToDoState extends State<ToDo> {
     }
   }
 
-  Future<void> _handleLoadData() async {
-    final provider = Provider.of<TodoProvider>(context,listen: false);
-    try {
-      await provider.loadData();
-    }catch (e){
-      _showErrorSnackbar("Erreur durant le chargement des données");
-    }
-  }
-
   Future<void> _handleupdateCategoryState(bool value,int id) async {
     final provider = Provider.of<TodoProvider>(context,listen: false);
     try {
