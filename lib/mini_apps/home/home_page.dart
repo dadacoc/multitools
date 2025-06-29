@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
               margin: const EdgeInsets.only(top: 10),
               child: ElevatedButton.icon(
                 onPressed: (){
-                  context.go('/Calculatrice');
+                  context.goNamed('calculatrice');
                 },
                 label: const Text("Entrer dans l'application !",
                   style: TextStyle(

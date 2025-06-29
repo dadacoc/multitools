@@ -22,13 +22,13 @@ class _ToDoState extends State<ToDo> {
   void _onItemTapped(int index) {
     switch (index) {
       case 0:
-        context.go('/Calculatrice');
+        context.goNamed('calculatrice');
         break;
       case 1:
-        context.go('/Transaction');
+        context.goNamed('transaction');
         break;
       case 2:
-        context.go('/ToDoList');
+        context.goNamed('todo-list');
         break;
       default:
         ScaffoldMessenger.of(context).showSnackBar(
@@ -163,7 +163,7 @@ class _ToDoState extends State<ToDo> {
                                   await deleteCategory(context, categoryId, categoryName);
                                   break;
                                 case ('Edit'):
-                                  await context.push('/ToDoList/EditCategory',extra: category);
+                                  await context.pushNamed('edit-category-todo',extra: category);
                                   break;
                               }
                             },
@@ -229,13 +229,13 @@ class _ToDoState extends State<ToDo> {
                             onSelected: (String choice) async {
                               switch (choice) {
                                 case ('Afficher plus'):
-                                  context.go('/ToDoList/AfficherPlusTodo',extra: todo);
+                                  context.goNamed('afficher-plus-todo',extra: todo);
                                   break;
                                 case ('Delete'):
                                   await _handleDeleteData(id: id);
                                   break;
                                 case ('Edit'):
-                                  context.push('/ToDoList/EditTodo',extra: todo);
+                                  context.pushNamed('edit-todo',extra: todo);
                                   break;
                               }
                             },
@@ -285,7 +285,7 @@ class _ToDoState extends State<ToDo> {
         width: 55,
         height: 55,
         child: FloatingActionButton(
-          onPressed: () => context.go("/ToDoList/CreateToDo"),
+          onPressed: () => context.goNamed("create-todo"),
           child: Icon(Icons.edit_note),
         ),
       ),

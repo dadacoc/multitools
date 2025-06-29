@@ -21,13 +21,13 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
   void _onItemTapped(int index){
     switch (index) {
       case 0:
-        context.go('/Calculatrice');
+        context.goNamed('calculatrice');
         break;
       case 1:
-        context.go('/Transaction');
+        context.goNamed('transaction');
         break;
       case 2:
-        context.go('/ToDoList');
+        context.goNamed('todo-list');
         break;
       default:
         ScaffoldMessenger.of(context).showSnackBar(
@@ -268,8 +268,8 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
                                                       int.parse(id));
                                                   break;
                                                 case ('Edit'):
-                                                  context.go(
-                                                      '/Transaction/Edit',
+                                                  context.goNamed(
+                                                      'edit-transaction',
                                                       extra: {
                                                         'id': int.parse(id),
                                                         'nom': nom,
@@ -427,8 +427,8 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
                                                           int.parse(id));
                                                       break;
                                                     case ('Edit'):
-                                                      context.go(
-                                                          '/Transaction/Edit',
+                                                      context.goNamed(
+                                                          'edit-transaction',
                                                           extra: {
                                                             'id': int.parse(id),
                                                             'nom': nom,
@@ -497,7 +497,7 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
         height: 55,
         child: FloatingActionButton(
           onPressed: () async {
-            bool? add = await context.push('/Transaction/AddTransaction');
+            bool? add = await context.pushNamed('add-transaction');
             if (add==true){
               await _handleLoadData();
               }

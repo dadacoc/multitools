@@ -258,7 +258,7 @@ class _EditTodoState extends State<EditTodo> {
                           onPressed: () async {
 
                             if (titreTodo.text.trim().isNotEmpty){
-                              final String? noteUser = await context.push('/ToDoList/NoteToDo',extra: <String,String>{'titre' : titreTodo.text , 'note' : note }); //On précise que c'est un Map<String,String> pour éviter des erreurs de cast
+                              final String? noteUser = await context.pushNamed('note-todo',extra: <String,String>{'titre' : titreTodo.text , 'note' : note }); //On précise que c'est un Map<String,String> pour éviter des erreurs de cast
                               if (noteUser!=null && noteUser.isNotEmpty){
                                 note = noteUser;
                               }
@@ -319,7 +319,7 @@ class _EditTodoState extends State<EditTodo> {
                       height: 35,
                       child: TextButton(
                           onPressed: () async {
-                            final String? categorieCreer = await context.push('/ToDoList/CreateCategory');
+                            final String? categorieCreer = await context.pushNamed('create-category-todo');
                             if (categorieCreer!=null && categorieCreer.isNotEmpty){
                               categorie.text=categorieCreer;
                             }

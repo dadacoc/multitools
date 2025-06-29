@@ -259,15 +259,15 @@ class _EditTransactionState extends State<EditTransaction> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ElevatedButton(
-              onPressed: () => context.go('/Transaction'),
+              onPressed: () => context.goNamed('transaction'),
               child: const Text("Annuler"),
             ),
             ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()){
-                  await _handleEditData(id: id, nom: nom, somme: somme, cause: cause);
+                  await _handleEditData(id: id, nom: nom, somme: double.parse(sommeRestante.text), cause: cause);
                   if (context.mounted){
-                    context.go('/Transaction');
+                    context.goNamed('transaction');
                   }
                 }
               },

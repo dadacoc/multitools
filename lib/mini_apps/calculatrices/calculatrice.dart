@@ -19,13 +19,13 @@ class _CalculatriceState extends State<Calculatrice> {
   void _onItemTapped(int index) {
     switch (index) {
       case 0:
-        context.go('/Calculatrice');
+        context.goNamed('calculatrice');
         break;
       case 1:
-        context.go('/Transaction');
+        context.goNamed('transaction');
         break;
       case 2:
-        context.go('/ToDoList');
+        context.goNamed('todo-list');
         break;
       default:
         ScaffoldMessenger.of(context).showSnackBar(
@@ -139,7 +139,7 @@ class _CalculatriceState extends State<Calculatrice> {
                     children: [
                       IconButton(
                         onPressed: () async {
-                            await context.push<bool>("/Calculatrice/Settings");
+                            await context.pushNamed<bool>("calculatrice-settings");
                             loadData();
                         },
                         icon: const Icon(Icons.settings),

@@ -152,6 +152,7 @@ class TransactionsProvider extends ChangeNotifier {
 
   Future<void> editData({required int id , required String nom , required double somme,required String cause})async {
     try {
+      print('id:$id');
       await database.update(
         'Transaction_main',
         {
