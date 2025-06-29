@@ -161,7 +161,6 @@ class TodoProvider extends ChangeNotifier {
       logger.e("Erreur avec addData de Todo",error: e,stackTrace: s);
       rethrow;
     }
-    //await loadData();
   }
 
   Future<void> deleteData({required int id}) async {
@@ -193,7 +192,6 @@ class TodoProvider extends ChangeNotifier {
       logger.e("Erreur avec updateData de Todo, id: $id",error: e,stackTrace: s);
       rethrow;
     }
-    //await loadData();
   }
 
   Future<void> addCategory({required String name, required String color}) async{
@@ -210,7 +208,6 @@ class TodoProvider extends ChangeNotifier {
       logger.e("Erreur avec addCategory de Todo",error: e,stackTrace: s);
       rethrow;
     }
-    //await loadData(needReloadCategories: true);
   }
 
   Future<void> updateCategory({required String name, required String color,required int id}) async{
@@ -228,7 +225,6 @@ class TodoProvider extends ChangeNotifier {
       logger.e("Erreur avec updateCategory de Todo, id: $id",error: e,stackTrace: s);
       rethrow;
     }
-    //await loadData(needReloadCategories: true);
   }
 
   Future<void> deleteCategorie({required int id,required bool supprimerTaches}) async {
@@ -259,8 +255,6 @@ class TodoProvider extends ChangeNotifier {
       logger.e("Erreur avec deleteCategory de Todo, id: $id",error: e,stackTrace: s);
       rethrow;
     }
-
-    //await loadData(needReloadCategories: true);
   }
 
 

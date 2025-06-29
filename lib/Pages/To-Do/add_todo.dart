@@ -30,9 +30,26 @@ class _CreateToDoState extends State<CreateToDo> {
     categorie.dispose();
   }
 
-  Future<void> addData() async {
-    provider.addData;
+  void _showErrorSnackbar(String message){
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    }
   }
+
+  Future<void> _handleAddData({required String titre, required String note , required int categoryId}) async {
+    final provider = Provider.of<TodoProvider>(context,listen: false);
+    try {
+      await provider.addData(titre: titre, note: note, categoryId: categoryId);
+    }catch (e){
+      _showErrorSnackbar("Erreur lors de l'ajout de la tâche");
+    }
+    try {
+      await provider.loadData();
+    }catch (e){
+      _showErrorSnackbar("Erreur durant le raffraichissement des données, tentez de relancer la page");
+    }
+  }
+
 
   final _formKey =GlobalKey<FormState>();
   TextEditingController titreTodo = TextEditingController();
@@ -301,8 +318,14 @@ class _CreateToDoState extends State<CreateToDo> {
                       ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()){
-                              final categoryId = await provider.getCategoryId(category: categorie.text);
-                              provider.addData(titre: titreTodo.text, note : note, categoryId: categoryId);
+                              int? categoryId;
+                              try {
+                                categoryId = await provider.getCategoryId(category: categorie.text);
+                              } catch (e) {
+                                _showErrorSnackbar("Erreur , la category '${categorie.text}' n'a pas été trouvé");
+                                return;
+                              }
+                              await _handleAddData(titre: titreTodo.text, note : note, categoryId: categoryId);
                               if (context.mounted) {
                                 context.go('/ToDoList');
                               }

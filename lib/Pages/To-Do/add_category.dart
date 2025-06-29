@@ -15,6 +15,26 @@ class _CreateCategoryState extends State<CreateCategory> {
 
   late TodoProvider provider;
 
+  void _showErrorSnackbar(String message){
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
+  Future<void> _handleAddCategory({required String name, required String color}) async {
+    final provider = Provider.of<TodoProvider>(context,listen: false);
+    try {
+      await provider.addCategory(name: name, color: color);
+    }catch (e){
+      _showErrorSnackbar("Erreur lors de l'ajout de la catégorie");
+    }
+    try {
+      await provider.loadData(needReloadCategories: true);
+    }catch (e){
+      _showErrorSnackbar("Erreur durant le raffraichissement des données, tentez de relancer la page");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -170,8 +190,10 @@ class _CreateCategoryState extends State<CreateCategory> {
                       ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()){
-                              provider.addCategory(name: name.text, color: couleur.text);
-                              context.pop(name.text);
+                              await _handleAddCategory(name: name.text, color: couleur.text);
+                              if (context.mounted){
+                                context.pop(name.text);
+                              }
                             }
                           },
                           child: Row(

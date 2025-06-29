@@ -18,7 +18,7 @@ Future<void> _handleDeleteCategory({required int id,required bool supprimerTache
     }
   }
   try {
-    await provider.loadData();
+    await provider.loadData(needReloadCategories: true);
   }catch (e){
     if (context.mounted) {
       _showErrorSnackbar("Erreur durant le raffraichissement des données, tentez de relancer la page",context);
