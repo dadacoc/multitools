@@ -1,9 +1,9 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-Future<Database> initialisationDB() async {
+Future<Database> initialiseDatabase() async {
   String path = join(await getDatabasesPath(), 'multitools.db');
-  Database db = await openDatabase(
+  return openDatabase(
     path,
     version: 1,
     onCreate: (Database db , int version) async {
@@ -52,56 +52,28 @@ Future<Database> initialisationDB() async {
           '''
         );
     },
-  );
-  //On verifie si les tables existes tous :
-    await _createdTableIfNotExist(db);
-    return db;
-}
+      //On gère les mise à jour future
+    onUpgrade: (Database db ,int oldVersion , int newVersion) async {
+      /*
+      Par exemple :
+      Le Scénario est le suivant :
+      Tu as sorti la V1 de ton application. Des utilisateurs l'utilisent.
+      Tu te rends compte qu'il te manque une information essentielle pour tes transactions :
+      la date à laquelle elles ont été effectuées.
+      Tu veux donc ajouter une colonne date à ta table Transaction_main.
 
-Future<void> _createdTableIfNotExist(Database db) async {
-  // Créez la table 'calculatrice' si elle n'existe pas
-  await db.execute(
-    '''
-    CREATE TABLE IF NOT EXISTS "Calculatrice_main"(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      argent REAL,
-      argent_plus REAL,
-      nombre_fois INTEGER
-    );
-    '''
-  );
-  await db.execute(
-    '''
-      CREATE TABLE IF NOT EXISTS "Transaction_main"(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        category TEXT,
-        checked INTEGER DEFAULT 0,
-        nom TEXT,
-        somme REAL,
-        cause TEXT
-      );
-    '''
-  );
-  await db.execute(
-      '''
-        CREATE TABLE IF NOT EXISTS "ToDo_main"(
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          category TEXT,
-          checked INTEGER DEFAULT 0,
-          titre TEXT,
-          note TEXT,
-          FOREIGN KEY (category_id) REFERENCES ToDo_category(id)
-        );
-        '''
-  );
-  await db.execute(
-      '''
-          CREATE TABLE IF NOT EXISTS "ToDo_category" (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            checked INTEGER DEFAULT 0,
-            color TEXT
-          );
+      D'abord on remplace la version du open en 2
+      ensuite on reviens ici et :
+
+      if (oldVersion<2) {
+        await db.execute(
           '''
+          ALTER TABLE Transaction_main ADD COLUMN date TEXT DEFAULT CURRENT_TIMESTAMP
+          '''
+        );
+      }
+      }
+       */
+    }
   );
 }

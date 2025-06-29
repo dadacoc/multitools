@@ -10,7 +10,7 @@ import 'package:sqflite/sqflite.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  final database = await initialisationDB();
+  final database = await initialiseDatabase();
   runApp(MyApp(database : database));
 }
 class MyApp extends StatelessWidget {
