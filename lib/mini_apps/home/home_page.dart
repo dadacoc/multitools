@@ -26,8 +26,15 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  //Le temps
+
   late Timer _timer;
   late DateTime _currentTime;
+  final String localLanguageUser = 'fr_FR'; //On note la langue du user en dure pour le premier dev
+
+  late DateFormat jourFormat;
+  late DateFormat horlogeFormat;
+
 
   @override
   void initState() {
@@ -38,6 +45,8 @@ class _HomePageState extends State<HomePage> {
         _currentTime = DateTime.now();
       });
     });
+    jourFormat = DateFormat.yMMMMEEEEd(localLanguageUser);
+    horlogeFormat  = DateFormat('HH:mm:ss',localLanguageUser);
   }
 
   @override
@@ -54,10 +63,10 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.blue,
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
+      body: Column(
           children: [
-            Image.asset("assets/images/BoiteAOutils.jpg"),
+            Text(jourFormat.format(_currentTime),style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+            Text(horlogeFormat.format(_currentTime),style: TextStyle(fontSize: 24,fontWeight: FontWeight.w500),),
             const Text("Bienvenue sur Multitools !",
               style: TextStyle(
                   fontSize: 24
@@ -80,7 +89,6 @@ class _HomePageState extends State<HomePage> {
             )
           ],
         ),
-      ),
 
       bottomNavigationBar: NavigationBar(
           destinations: [
