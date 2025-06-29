@@ -11,21 +11,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  //Navigation
-  final int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    switch (index){
-      case 0:
-        context.go('/');
-        break;
-
-      case 1:
-        break;
-    }
-  }
-
   //Le temps
 
   late Timer _timer;
@@ -89,15 +74,6 @@ class _HomePageState extends State<HomePage> {
             )
           ],
         ),
-
-      bottomNavigationBar: NavigationBar(
-          destinations: [
-            NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-            NavigationDestination(icon: Icon(Icons.apps), label: 'Catalogue')
-          ],
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: _onItemTapped ,
-      )
     );
   }
 }
