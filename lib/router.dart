@@ -1,4 +1,4 @@
-import 'package:multitools/mini_apps/calculatrice.dart';
+import 'package:multitools/mini_apps/calculatrices/calculatrice.dart';
 import 'package:multitools/mini_apps/todos/add_todo.dart';
 import 'package:multitools/mini_apps/todos/afficherplus_todo.dart';
 import 'package:multitools/mini_apps/todos/edit_todo.dart';
@@ -8,10 +8,11 @@ import 'package:multitools/mini_apps/todos/edit_category.dart';
 import 'package:multitools/mini_apps/transactions/add_transaction.dart';
 import 'package:multitools/mini_apps/transactions/edit_transaction.dart';
 import 'package:multitools/mini_apps/transactions/transaction.dart';
-import 'package:multitools/mini_apps/home_page.dart';
+import 'package:multitools/mini_apps/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:multitools/mini_apps/todos/add_category.dart';
+import 'mini_apps/calculatrices/calculatrice_settings.dart';
 
 final GoRouter router = GoRouter(
     routes: <RouteBase>[
