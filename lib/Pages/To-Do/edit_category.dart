@@ -26,6 +26,26 @@ class _EditCategoryState extends State<EditCategory> {
   late TextEditingController name;
   late TextEditingController couleur;
 
+  void _showErrorSnackbar(String message){
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
+  Future<void> _handleupdateCategory({required String name, required String color,required int id}) async {
+    final provider = Provider.of<TodoProvider>(context,listen: false);
+    try {
+      await provider.updateCategory(name: name, color: color, id: id);
+    }catch (e){
+      _showErrorSnackbar("Erreur durant l'édit de la catégory");
+    }
+    try {
+      await provider.loadData(needReloadCategories: true);
+    }catch (e){
+      _showErrorSnackbar("Erreur durant le raffraichissement des données, tentez de relancer la page");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -196,8 +216,10 @@ class _EditCategoryState extends State<EditCategory> {
                     ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()){
-                            provider.updateCategory(name: name.text, color: couleur.text,id: categoryId);
-                            context.pop();
+                            await _handleupdateCategory(name: name.text, color: couleur.text,id: categoryId);
+                            if (context.mounted) {
+                              context.pop();
+                            }
                           }
                         },
                         child: Row(

@@ -37,11 +37,72 @@ class _ToDoState extends State<ToDo> {
     }
   }
 
+  void _showErrorSnackbar(String message){
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
+  Future<void> _handleLoadData() async {
+    final provider = Provider.of<TodoProvider>(context,listen: false);
+    try {
+      await provider.loadData();
+    }catch (e){
+      _showErrorSnackbar("Erreur durant le chargement des données");
+    }
+  }
+
+  Future<void> _handleupdateCategoryState(bool value,int id) async {
+    final provider = Provider.of<TodoProvider>(context,listen: false);
+    try {
+      await provider.updateCategoryState(value, id);
+    }catch (e){
+      _showErrorSnackbar("Erreur durant le changement de l'état de la catégory");
+    }
+    try {
+      await provider.loadData(needReloadCategories: true);
+    }catch (e){
+      _showErrorSnackbar("Erreur durant le raffraichissement des données, tentez de relancer la page");
+    }
+  }
+
+  Future<void> _handleupdateState(bool value,int id) async {
+    final provider = Provider.of<TodoProvider>(context,listen: false);
+    try {
+      await provider.updateState(value, id);
+    }catch (e){
+      _showErrorSnackbar("Erreur durant le changement de l'état de la tâche");
+    }
+    try {
+      await provider.loadData();
+    }catch (e){
+      _showErrorSnackbar("Erreur durant le raffraichissement des données, tentez de relancer la page");
+    }
+  }
+
+  Future<void> _handleDeleteData({required int id}) async {
+    final provider = Provider.of<TodoProvider>(context,listen: false);
+    try {
+      provider.deleteData(id: id);
+    }catch (e){
+      _showErrorSnackbar("Erreur lors de la suppression de la tâche");
+    }
+    try {
+      await provider.loadData();
+    }catch (e){
+      _showErrorSnackbar("Erreur durant le raffraichissement des données, tentez de relancer la page");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     final provider = Provider.of<TodoProvider>(context , listen: false);
-    provider.loadData(needReloadCategories: true);
+    provider.loadData(needReloadCategories: true).catchError((e){
+      if (mounted){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Erreur durant le chargement des données")));
+      }
+    });
     //provider.clear();
     //provider.testCreation();
   }
@@ -86,8 +147,8 @@ class _ToDoState extends State<ToDo> {
                       children: [
                         Checkbox(
                             value: categoryChecked,
-                            onChanged: (bool? value){
-                              provider.updateCategoryState(value!,categoryId);
+                            onChanged: (bool? value) async {
+                              await _handleupdateCategoryState(value!,categoryId);
                             }
                             ),
                         Expanded(
@@ -158,7 +219,7 @@ class _ToDoState extends State<ToDo> {
                       return ListTile(
                         leading: Checkbox(
                           onChanged: (bool? value) async {
-                            await provider.updateState(value!, id);
+                            await _handleupdateState(value!, id);
                           },
                           value: checked,
                         ),
@@ -180,7 +241,7 @@ class _ToDoState extends State<ToDo> {
                                   context.go('/ToDoList/AfficherPlusTodo',extra: todo);
                                   break;
                                 case ('Delete'):
-                                  await provider.deleteData(id: id);
+                                  await _handleDeleteData(id: id);
                                   break;
                                 case ('Edit'):
                                   context.push('/ToDoList/EditTodo',extra: todo);
@@ -251,43 +312,3 @@ class _ToDoState extends State<ToDo> {
     );
   }
 }
-
-
-
-/*
-ListView.builder(
-              padding: EdgeInsets.only(bottom: 50),
-              itemCount: provider.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                final todo = provider.data[index];
-                final id = todo['id'];
-                final categoryId = todo['category_id'];
-                final text = todo['text'];
-                final checked = todo['checked']==1;
-                final categoryName = provider.categoriesMap[categoryId];
-
-                return Card(
-                  child: ListTile(
-                    leading: Checkbox(
-                      onChanged: (bool? value) async {
-                        await provider.updateState(value!, id);
-                      },
-                      value: checked,
-                    ),
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('$text',style: TextStyle(
-                          decoration: checked ? TextDecoration.lineThrough : TextDecoration.none,
-                        ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-
-                )
- */
