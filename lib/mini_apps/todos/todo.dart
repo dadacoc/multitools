@@ -1,5 +1,5 @@
-import 'package:multitools/Pages/To-Do/provider_todo.dart';
-import 'package:multitools/Pages/To-Do/category_option.dart';
+import 'package:multitools/mini_apps/todos/provider_todo.dart';
+import 'package:multitools/mini_apps/todos/category_option.dart';
 import 'package:multitools/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,17 +1,17 @@
-import 'package:multitools/Pages/calculatrice.dart';
-import 'package:multitools/Pages/To-Do/add_todo.dart';
-import 'package:multitools/Pages/To-Do/afficherplus_todo.dart';
-import 'package:multitools/Pages/To-Do/edit_todo.dart';
-import 'package:multitools/Pages/To-Do/note.dart';
-import 'package:multitools/Pages/To-Do/todo.dart';
-import 'package:multitools/Pages/To-Do/edit_category.dart';
-import 'package:multitools/Pages/Transaction/add_transaction.dart';
-import 'package:multitools/Pages/Transaction/edit_transaction.dart';
-import 'package:multitools/Pages/Transaction/transaction.dart';
-import 'package:multitools/Pages/home_page.dart';
+import 'package:multitools/mini_apps/calculatrice.dart';
+import 'package:multitools/mini_apps/todos/add_todo.dart';
+import 'package:multitools/mini_apps/todos/afficherplus_todo.dart';
+import 'package:multitools/mini_apps/todos/edit_todo.dart';
+import 'package:multitools/mini_apps/todos/note.dart';
+import 'package:multitools/mini_apps/todos/todo.dart';
+import 'package:multitools/mini_apps/todos/edit_category.dart';
+import 'package:multitools/mini_apps/transactions/add_transaction.dart';
+import 'package:multitools/mini_apps/transactions/edit_transaction.dart';
+import 'package:multitools/mini_apps/transactions/transaction.dart';
+import 'package:multitools/mini_apps/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:multitools/Pages/To-Do/add_category.dart';
+import 'package:multitools/mini_apps/todos/add_category.dart';
 
 final GoRouter router = GoRouter(
     routes: <RouteBase>[
