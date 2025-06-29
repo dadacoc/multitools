@@ -240,7 +240,6 @@ class CalculatriceSettings extends StatefulWidget {
 
 class _CalculatriceSettingsState extends State<CalculatriceSettings> {
 
-
   List<Map<String,dynamic>> data = [];
   late Database database;
   bool isLoading = false;
