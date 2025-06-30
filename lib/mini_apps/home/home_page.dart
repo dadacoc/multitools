@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:multitools/app_sizes.dart';
+import 'package:multitools/mini_apps/home/empty_shortcut_apps.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -49,7 +50,7 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0,vertical: 20.0),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.padding.l ,vertical: AppSizes.padding.m),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -95,15 +96,7 @@ class _HomePageState extends State<HomePage> {
                               childAspectRatio: perfectAspectRatio
                           ),
                           itemBuilder: (BuildContext context, index) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(AppSizes.corners.m)),
-                              ),
-                              child: Icon(Icons.add, color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                size: AppSizes.icon.xl,),
-                            );
+                            return EmptyShortcutTitle();
                           }
                       );
                     })
