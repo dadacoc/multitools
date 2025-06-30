@@ -90,6 +90,7 @@ class _EditTodoState extends State<EditTodo> {
 
     TextEditingController searchBar = TextEditingController();
     String categorieChoisie = categorie.text;
+    List<Map<String, dynamic>> filteredCategories = List.from(provider.categories);
 
     return await showModalBottomSheet<String?>(
         context: context,
@@ -100,7 +101,6 @@ class _EditTodoState extends State<EditTodo> {
           return StatefulBuilder(
               builder: (context , setState){
                 TodoProvider provider = Provider.of<TodoProvider>(listen: true,context);
-                List<Map<String, dynamic>> filteredCategories = List.from(provider.categories);
 
                 return Container(
                   padding: EdgeInsets.only(top: 20,left: 20,right: 20, bottom: MediaQuery.of(context).viewInsets.bottom), //Permet de mettre le padding du clavier
@@ -120,7 +120,7 @@ class _EditTodoState extends State<EditTodo> {
                         ),
                         onChanged: (recherche){
                           setState((){
-                            filteredCategories = provider.categories.where((categorie) => categorie['name'].toLowerCase().contains(recherche.toLowerCase())).toList();
+                            filteredCategories = provider.categories.where((categorie) => (categorie['name'].toLowerCase().trim()).contains(recherche.toLowerCase().trim())).toList();
                           });
                         },
                       ),

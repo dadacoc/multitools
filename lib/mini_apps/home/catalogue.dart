@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:multitools/mini_apps/home/catalogue_provider.dart';
 import 'package:multitools/mini_apps/home/shortcut_apps.dart';
+import 'package:provider/provider.dart';
 
 import '../../app_sizes.dart';
 
@@ -13,6 +15,9 @@ class Catalogue extends StatefulWidget {
 
 class _CatalogueState extends State<Catalogue> {
 
+  late CatalogueProvider provider;
+
+
   ///Données de test
   final List<Map<String, dynamic>> allMiniApps = [
     {'name': 'Calculatrice', 'icon': Icons.calculate, 'navigation':'calculatrice'},
@@ -24,23 +29,44 @@ class _CatalogueState extends State<Catalogue> {
 
   @override
   Widget build(BuildContext context) {
+
+    provider = Provider.of<CatalogueProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Catalogue"),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
       ),
-      body:GridView.builder(
-            padding: EdgeInsets.symmetric(horizontal: AppSizes.padding.l ,vertical: AppSizes.padding.m), //Ancienne valeur 24 et 20 , nouvelle 24 (l) et 16 (m) ,
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 160.0,
-                mainAxisSpacing: AppSizes.gap.m,
-                crossAxisSpacing: AppSizes.gap.m
+      body:Column(
+        children: [
+          SizedBox(height: AppSizes.gap.m,),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.padding.l ,vertical: AppSizes.padding.m),
+            child: TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.corners.l)),
+                hint: Text("Rechercher"),
+                prefixIcon: Icon(Icons.search)
+              ),
+              onChanged: (research) => provider.filterApps(research),
             ),
-            itemCount: allMiniApps.length,
-            itemBuilder: (BuildContext context , int index){
-              return ShortcutApps(miniApp: allMiniApps[index]);
-            },
+          ),
+          Expanded(
+            child: GridView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: AppSizes.padding.l ,vertical: AppSizes.padding.m), //Ancienne valeur 24 et 20 , nouvelle 24 (l) et 16 (m) ,
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 160.0,
+                      mainAxisSpacing: AppSizes.gap.m,
+                      crossAxisSpacing: AppSizes.gap.m
+                  ),
+                  itemCount: provider.filteredApps.length,
+                  itemBuilder: (BuildContext context , int index){
+                    return ShortcutApps(miniApp: provider.filteredApps[index]);
+                  },
+            ),
+          ),
+        ],
       ),
     );
   }
