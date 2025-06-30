@@ -12,11 +12,11 @@ class CatalogueProvider extends ChangeNotifier {
 
   ///Données de test
   final List<Map<String, dynamic>> allMiniApps = [
-    {'name': 'Suivi Tâches', 'icon': Icons.cleaning_services, 'navigation':'chore-tracker','keywords':['calcul','tache','finance','argent']},
-    {'name': 'Transactions', 'icon': Icons.receipt_long,'navigation':'transaction','keywords':['finance','argent','money','emprunt','pret']},
-    {'name': 'To-Do List', 'icon': Icons.check_box_outlined,'navigation': 'todo-list','keywords':['planning','tache','rappel']},
-    {'name': 'Épargne', 'icon': Icons.savings_outlined,'navigation':'epargne','keywords':['finance','argent','money','gestion']},
-    {'name': 'Chronomètre', 'icon': Icons.timer_outlined,'navigation':'chronomètre','keywords':['temps', 'course', 'timer', 'montre', 'stopwatch']},
+    {'id':0,'name': 'Suivi Tâches', 'icon': Icons.cleaning_services, 'navigation':'chore-tracker','keywords':['calcul','tache','finance','argent']},
+    {'id':1,'name': 'Transactions', 'icon': Icons.receipt_long,'navigation':'transaction','keywords':['finance','argent','money','emprunt','pret']},
+    {'id':2,'name': 'To-Do List', 'icon': Icons.check_box_outlined,'navigation': 'todo-list','keywords':['planning','tache','rappel']},
+    {'id':3,'name': 'Épargne', 'icon': Icons.savings_outlined,'navigation':'epargne','keywords':['finance','argent','money','gestion']},
+    {'id':4,'name': 'Chronomètre', 'icon': Icons.timer_outlined,'navigation':'chronomètre','keywords':['temps', 'course', 'timer', 'montre', 'stopwatch']},
   ];
 
   late List<Map<String, dynamic>> filteredApps;

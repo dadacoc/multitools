@@ -1,4 +1,5 @@
 import 'package:multitools/mini_apps/home/catalogue_page/catalogue_provider.dart';
+import 'package:multitools/mini_apps/home/home_page/home_provider.dart';
 import 'package:multitools/mini_apps/todos/provider_todo.dart';
 import 'package:multitools/mini_apps/transactions/provider.dart';
 import 'package:multitools/router.dart';
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
         Provider<Database>.value(value: database),
         ChangeNotifierProvider(create: (_) => TransactionsProvider(database)),
         ChangeNotifierProvider(create: (_) => TodoProvider(database: database)),
-        ChangeNotifierProvider(create: (_) => CatalogueProvider(database: database))
+        ChangeNotifierProvider(create: (_) => CatalogueProvider(database: database)),
+        ChangeNotifierProvider(create: (_) => HomeProvider(database: database))
       ],
       child: MaterialApp.router(
         routerConfig: router,

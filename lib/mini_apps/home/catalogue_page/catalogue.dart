@@ -7,7 +7,10 @@ import '../../../app_sizes.dart';
 
 
 class Catalogue extends StatefulWidget {
-  const Catalogue({super.key});
+
+  final bool isPickerMode;
+
+  const Catalogue({super.key, required this.isPickerMode});
 
   @override
   State<Catalogue> createState() => _CatalogueState();
@@ -15,27 +18,15 @@ class Catalogue extends StatefulWidget {
 
 class _CatalogueState extends State<Catalogue> {
 
-  late CatalogueProvider provider;
-
-
-  ///Données de test
-  final List<Map<String, dynamic>> allMiniApps = [
-    {'name': 'Calculatrice', 'icon': Icons.calculate, 'navigation':'calculatrice'},
-    {'name': 'Transactions', 'icon': Icons.receipt_long,'navigation':'transaction'},
-    {'name': 'To-Do List', 'icon': Icons.check_box_outlined,'navigation': 'todo-list'},
-    {'name': 'Épargne', 'icon': Icons.savings_outlined,'navigation':'epargne'},
-    {'name': 'Chronomètre', 'icon': Icons.timer_outlined,'navigation':'chronomètre'},
-  ];
-
   @override
   Widget build(BuildContext context) {
 
-    provider = Provider.of<CatalogueProvider>(context);
+    final CatalogueProvider provider = context.watch<CatalogueProvider>();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Catalogue"),
-        automaticallyImplyLeading: false,
+        title: Text( widget.isPickerMode ? "Sélectionner une application" : "Catalogue"),
+        automaticallyImplyLeading: widget.isPickerMode,
         backgroundColor: Colors.blue,
       ),
       body:Column(
@@ -62,7 +53,7 @@ class _CatalogueState extends State<Catalogue> {
                   ),
                   itemCount: provider.filteredApps.length,
                   itemBuilder: (BuildContext context , int index){
-                    return ShortcutApps(miniApp: provider.filteredApps[index]);
+                    return ShortcutApps(miniApp: provider.filteredApps[index],isPickerMode: widget.isPickerMode,);
                   },
             ),
           ),

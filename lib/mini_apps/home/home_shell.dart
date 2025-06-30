@@ -40,7 +40,7 @@ class HomeShell extends StatelessWidget {
           break;
 
         case 1:
-          context.goNamed('catalogue');
+          context.goNamed('catalogue',extra: false);
           break;
       }
     }

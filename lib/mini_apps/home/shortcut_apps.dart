@@ -5,13 +5,16 @@ import 'package:multitools/app_sizes.dart';
 class ShortcutApps extends StatelessWidget {
 
   final Map<String, dynamic> miniApp;
+  final bool isPickerMode;
 
-  const ShortcutApps({super.key,required this.miniApp});
+  const ShortcutApps({super.key,required this.miniApp,required this.isPickerMode});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () { context.pushNamed(miniApp['navigation']); },
+      onTap: () {
+        isPickerMode ? context.pop(miniApp) : context.pushNamed(miniApp['navigation']);
+      },
       borderRadius: BorderRadius.circular(AppSizes.corners.m),
       child: Container(
         decoration: BoxDecoration(

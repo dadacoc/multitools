@@ -35,7 +35,8 @@ final GoRouter router = GoRouter(
               path: '/catalogue',
               name: 'catalogue',
               builder: (BuildContext context,GoRouterState state){
-                return const Catalogue();
+                final bool data = state.extra as bool;
+                return Catalogue(isPickerMode: data,);
               }
             )
           ]

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:multitools/app_sizes.dart';
 import 'package:multitools/mini_apps/home/empty_shortcut_apps.dart';
+import 'package:multitools/mini_apps/home/home_page/home_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:multitools/mini_apps/home/shortcut_apps.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,6 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   //Le temps
 
   late Timer _timer;
@@ -43,6 +47,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final HomeProvider provider = context.watch<HomeProvider>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),
@@ -59,6 +66,34 @@ class _HomePageState extends State<HomePage> {
               Text("MES RACCOURCIS",style: Theme.of(context).textTheme.titleMedium,),
               AppDividers.standard,
               Expanded(
+                  child: GridView.builder(
+                      itemCount: provider.shortcuts.length,
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 160.0,
+                          mainAxisSpacing: AppSizes.gap.m,
+                          crossAxisSpacing: AppSizes.gap.m,
+                      ),
+                      itemBuilder: (BuildContext context, index) {
+
+                        if (provider.shortcuts[index] == null) {
+                          return EmptyShortcutTitle(index : index);
+                        }else {
+                          return ShortcutApps(miniApp: provider.shortcuts[index]!,isPickerMode: false,);
+                        }
+                          }
+                  )
+              )
+            ],
+          ),
+      ),
+    );
+  }
+}
+
+/*
+Affichage fixe des raccourcis et parfait (sans scroll)
+
+Expanded(
                   child: LayoutBuilder(
                     builder: (BuildContext context, BoxConstraints constraints) {
 
@@ -95,14 +130,14 @@ class _HomePageState extends State<HomePage> {
                               childAspectRatio: perfectAspectRatio
                           ),
                           itemBuilder: (BuildContext context, index) {
-                            return EmptyShortcutTitle();
+
+                            if (provider.shortcuts[index] == null) {
+                              return EmptyShortcutTitle();
+                            }else {
+                              return ShortcutApps(miniApp: provider.shortcuts[index]!);
+                            }
                           }
                       );
                     })
               )
-            ],
-          ),
-      ),
-    );
-  }
-}
+ */
