@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:multitools/app_sizes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -48,32 +48,69 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.blue,
         centerTitle: true,
       ),
-      body: Column(
-          children: [
-            Text(jourFormat.format(_currentTime),style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-            Text(horlogeFormat.format(_currentTime),style: TextStyle(fontSize: 24,fontWeight: FontWeight.w500),),
-            const Text("Bienvenue sur Multitools !",
-              style: TextStyle(
-                  fontSize: 24
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 10),
-              child: ElevatedButton.icon(
-                onPressed: (){
-                  context.goNamed('calculatrice');
-                },
-                label: const Text("Entrer dans l'application !",
-                  style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.green
-                  ),
-                ),
-                icon: const Icon(Icons.launch , size: 24,color: Colors.green,),
-              ),
-            )
-          ],
-        ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0,vertical: 20.0),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(horlogeFormat.format(_currentTime),style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w300,color: Theme.of(context).colorScheme.onSurface)),
+              Text(jourFormat.format(_currentTime).toUpperCase(),style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+              SizedBox(height: AppSizes.gap.xl,),
+              Text("MES RACCOURCIS",style: Theme.of(context).textTheme.titleMedium,),
+              AppDividers.standard,
+              Expanded(
+                  child: LayoutBuilder(
+                    builder: (BuildContext context, BoxConstraints constraints) {
+
+                      const int crossAxisCount = 2;
+                      final double crossAxisSpacing = AppSizes.gap.m;
+                      final double mainAxisSpacing = AppSizes.gap.m;
+
+                      final double itemWidth = (constraints.maxWidth - crossAxisSpacing ) / crossAxisCount;
+
+                      final int rowCount = ((constraints.maxHeight) / (itemWidth + mainAxisSpacing)).floor();
+
+                      if (rowCount<=0) {
+                        return const SizedBox.shrink();
+                      }
+
+                      final int dynamicItemCount = rowCount * crossAxisCount;
+
+                      // Hauteur totale occupée par les espacements ENTRE les rangées.
+                      // Pour 3 rangées, il y a 2 espacements, donc (3 - 1) * spacing.
+                      final double totalSpacing = mainAxisSpacing * (rowCount - 1);
+                      // Hauteur disponible pour les tuiles elles-mêmes.
+                      final double availableHeightForItems = constraints.maxHeight - totalSpacing;
+                      // Hauteur exacte que chaque tuile doit avoir pour remplir l'espace.
+                      final double perfectItemHeight = availableHeightForItems / rowCount;
+
+                      final double perfectAspectRatio = itemWidth / perfectItemHeight;
+
+                      return GridView.builder(
+                          itemCount: dynamicItemCount,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              mainAxisSpacing: crossAxisSpacing,
+                              crossAxisSpacing: mainAxisSpacing,
+                              crossAxisCount: crossAxisCount,
+                              childAspectRatio: perfectAspectRatio
+                          ),
+                          itemBuilder: (BuildContext context, index) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(AppSizes.corners.m)),
+                              ),
+                              child: Icon(Icons.add, color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                size: AppSizes.icon.xl,),
+                            );
+                          }
+                      );
+                    })
+              )
+            ],
+          ),
+      ),
     );
   }
 }
