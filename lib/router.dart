@@ -1,4 +1,4 @@
-import 'package:multitools/mini_apps/calculatrices/calculatrice.dart';
+import 'package:multitools/mini_apps/chore_trackers/chore_tracker.dart';
 import 'package:multitools/mini_apps/home/catalogue.dart';
 import 'package:multitools/mini_apps/todos/add_todo.dart';
 import 'package:multitools/mini_apps/todos/afficherplus_todo.dart';
@@ -13,7 +13,7 @@ import 'package:multitools/mini_apps/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:multitools/mini_apps/todos/add_category.dart';
-import 'mini_apps/calculatrices/calculatrice_settings.dart';
+import 'mini_apps/chore_trackers/chore_tracker_settings.dart';
 import 'mini_apps/home/home_shell.dart';
 
 final GoRouter router = GoRouter(
@@ -41,17 +41,17 @@ final GoRouter router = GoRouter(
           ]
       ),
       GoRoute(
-        path: '/calculatrice',
-        name: 'calculatrice',
+        path: '/chore-tracker',
+        name: 'chore-tracker',
         builder: (BuildContext context , GoRouterState state) {
-          return const Calculatrice();
+          return const ChoreTracker();
         },
         routes: <RouteBase>[
           GoRoute(
             path: "settings",
-            name: 'calculatrice-settings',
+            name: 'chore-tracker-settings',
             builder: (BuildContext context , GoRouterState state){
-              return const CalculatriceSettings();
+              return const ChoreTrackerSettings();
             }
           ),
         ],

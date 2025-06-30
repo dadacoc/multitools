@@ -4,14 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:provider/provider.dart';
 
-class Calculatrice extends StatefulWidget {
-  const Calculatrice({super.key});
+class ChoreTracker extends StatefulWidget {
+  const ChoreTracker({super.key});
 
   @override
-  State<Calculatrice> createState() => _CalculatriceState();
+  State<ChoreTracker> createState() => _ChoreTrackerState();
 }
 
-class _CalculatriceState extends State<Calculatrice> {
+class _ChoreTrackerState extends State<ChoreTracker> {
 
   //Data
   List<Map<String,dynamic>> data = [];
@@ -38,15 +38,15 @@ class _CalculatriceState extends State<Calculatrice> {
     setState(() {
       isLoading = true;
     });
-    List<Map<String,dynamic>> dataQuery = await database.query('Calculatrice_main');
+    List<Map<String,dynamic>> dataQuery = await database.query('ChoreTracker_main');
     if (dataQuery.isEmpty){
       await database.insert(
-        'Calculatrice_main',{
+        'ChoreTracker_main',{
           'argent' : 0.0,
           'argent_plus' : 0.0,
           'nombre_fois' : 0
       });
-      dataQuery = await database.query('Calculatrice_main');
+      dataQuery = await database.query('ChoreTracker_main');
     }
     data = dataQuery;
     await updateVar();
@@ -54,7 +54,7 @@ class _CalculatriceState extends State<Calculatrice> {
 
   Future<void> updateData(double argent ,double argentPlus , int nombreFois) async {
     await database.update(
-        'Calculatrice_main',
+        'ChoreTracker_main',
         {
           'argent' : argent,
           'argent_plus' : argentPlus,
@@ -104,7 +104,7 @@ class _CalculatriceState extends State<Calculatrice> {
 
     return Scaffold(
       appBar: AppBar(
-       title: const Text("Calculatrice"),
+       title: const Text("Suivi Tâches"),
        backgroundColor: Colors.blue,
       ),
       body: Stack(
@@ -117,7 +117,7 @@ class _CalculatriceState extends State<Calculatrice> {
                     children: [
                       IconButton(
                         onPressed: () async {
-                            await context.pushNamed<bool>("calculatrice-settings");
+                            await context.pushNamed<bool>("chore-tracker-settings");
                             loadData();
                         },
                         icon: const Icon(Icons.settings),

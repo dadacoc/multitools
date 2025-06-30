@@ -5,11 +5,11 @@ Future<Database> initialiseDatabase() async {
   String path = join(await getDatabasesPath(), 'multitools.db');
   return openDatabase(
     path,
-    version: 1,
+    version: 2,
     onCreate: (Database db , int version) async {
         await db.execute(
             '''
-            CREATE TABLE "Calculatrice_main"(
+            CREATE TABLE "ChoreTracker_main"(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 argent REAL,
                 argent_plus REAL,
@@ -68,12 +68,19 @@ Future<Database> initialiseDatabase() async {
       if (oldVersion<2) {
         await db.execute(
           '''
-          ALTER TABLE Transaction_main ADD COLUMN date TEXT DEFAULT CURRENT_TIMESTAMP
+          ALTER TABLE Transaction_main ADD COLUMN date TEXT DEFAULT CURRENT_TIMESTAMP;
           '''
         );
       }
       }
        */
+      if (oldVersion<2){
+        db.execute(
+          '''
+          ALTER TABLE Calculatrice_main RENAME TO ChoreTracker_main;
+          '''
+        );
+      }
     }
   );
 }
