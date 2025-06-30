@@ -1,5 +1,5 @@
 import 'package:multitools/mini_apps/chore_trackers/chore_tracker.dart';
-import 'package:multitools/mini_apps/home/catalogue.dart';
+import 'package:multitools/mini_apps/home/catalogue_page/catalogue.dart';
 import 'package:multitools/mini_apps/todos/add_todo.dart';
 import 'package:multitools/mini_apps/todos/afficherplus_todo.dart';
 import 'package:multitools/mini_apps/todos/edit_todo.dart';
@@ -9,7 +9,7 @@ import 'package:multitools/mini_apps/todos/edit_category.dart';
 import 'package:multitools/mini_apps/transactions/add_transaction.dart';
 import 'package:multitools/mini_apps/transactions/edit_transaction.dart';
 import 'package:multitools/mini_apps/transactions/transaction.dart';
-import 'package:multitools/mini_apps/home/home_page.dart';
+import 'package:multitools/mini_apps/home/home_page/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:multitools/mini_apps/todos/add_category.dart';
