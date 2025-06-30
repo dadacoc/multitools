@@ -14,28 +14,6 @@ class Transaction extends StatefulWidget {
 
 class _TransactionState extends State<Transaction> with SingleTickerProviderStateMixin {
 
-  //Route
-
-  final int _selectedIndex = 1;
-
-  void _onItemTapped(int index){
-    switch (index) {
-      case 0:
-        context.goNamed('calculatrice');
-        break;
-      case 1:
-        context.goNamed('transaction');
-        break;
-      case 2:
-        context.goNamed('todo-list');
-        break;
-      default:
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Page non existante ou en production'))
-        );
-    }
-  }
-
   //Alert Dialog
 
   Future<void> showText({required String nom, required String somme,required String cause,required String color}) async{
@@ -163,7 +141,6 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
       appBar: AppBar(
         title: Text("Transaction"),
         backgroundColor: Colors.blue ,
-        automaticallyImplyLeading: false,
         bottom: TabBar(
             controller: _tabController,
             tabs: const <Widget>[
@@ -268,7 +245,7 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
                                                       int.parse(id));
                                                   break;
                                                 case ('Edit'):
-                                                  context.goNamed(
+                                                  context.pushNamed(
                                                       'edit-transaction',
                                                       extra: {
                                                         'id': int.parse(id),
@@ -427,7 +404,7 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
                                                           int.parse(id));
                                                       break;
                                                     case ('Edit'):
-                                                      context.goNamed(
+                                                      context.pushNamed(
                                                           'edit-transaction',
                                                           extra: {
                                                             'id': int.parse(id),
@@ -504,17 +481,6 @@ class _TransactionState extends State<Transaction> with SingleTickerProviderStat
           },
           child: Icon(Icons.add),
         ),
-      ),
-
-      bottomNavigationBar: NavigationBar(
-        destinations: [
-          const NavigationDestination(icon: Icon(Icons.calculate), label: "Calculatrice"),
-          const NavigationDestination(icon: Icon(Icons.price_check), label: "Transaction"),
-          const NavigationDestination(icon: Icon(Icons.check_box), label: "To-Do List"),
-          const NavigationDestination(icon: Icon(Icons.dehaze_outlined), label: "Plus")
-        ],
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: _onItemTapped,
       ),
     );
   }

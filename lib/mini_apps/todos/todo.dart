@@ -15,28 +15,6 @@ class ToDo extends StatefulWidget {
 
 class _ToDoState extends State<ToDo> {
 
-  //Route
-
-  final int _selectedIndex = 2;
-
-  void _onItemTapped(int index) {
-    switch (index) {
-      case 0:
-        context.goNamed('calculatrice');
-        break;
-      case 1:
-        context.goNamed('transaction');
-        break;
-      case 2:
-        context.goNamed('todo-list');
-        break;
-      default:
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Page non existante ou en production'))
-        );
-    }
-  }
-
   void _showErrorSnackbar(String message){
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
@@ -107,7 +85,6 @@ class _ToDoState extends State<ToDo> {
       appBar: AppBar(
         title: Text("To-Do List"),
         backgroundColor: Colors.blue,
-        automaticallyImplyLeading: false,
       ),
       body: (provider.data.isEmpty)
           ? Text("Aucune tâche n'a été crée")
@@ -229,7 +206,7 @@ class _ToDoState extends State<ToDo> {
                             onSelected: (String choice) async {
                               switch (choice) {
                                 case ('Afficher plus'):
-                                  context.goNamed('afficher-plus-todo',extra: todo);
+                                  context.pushNamed('afficher-plus-todo',extra: todo);
                                   break;
                                 case ('Delete'):
                                   await _handleDeleteData(id: id);
@@ -285,20 +262,9 @@ class _ToDoState extends State<ToDo> {
         width: 55,
         height: 55,
         child: FloatingActionButton(
-          onPressed: () => context.goNamed("create-todo"),
+          onPressed: () => context.pushNamed("create-todo"),
           child: Icon(Icons.edit_note),
         ),
-      ),
-
-      bottomNavigationBar: NavigationBar(
-          destinations: [
-            const NavigationDestination(icon: Icon(Icons.calculate), label: "Calculatrice"),
-            const NavigationDestination(icon: Icon(Icons.price_check), label: "Transaction"),
-            const NavigationDestination(icon: Icon(Icons.check_box), label: "To-Do List"),
-            const NavigationDestination(icon: Icon(Icons.dehaze_outlined), label: "Plus")
-          ],
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: _onItemTapped,
       ),
     );
   }

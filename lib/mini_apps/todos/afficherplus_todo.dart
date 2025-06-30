@@ -42,8 +42,6 @@ class _AfficherPlusTodoState extends State<AfficherPlusTodo> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Afficher Plus"),
-        centerTitle: true,
-        automaticallyImplyLeading: true,
         actions: [
           IconButton(
               onPressed: () async {

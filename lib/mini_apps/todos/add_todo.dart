@@ -188,8 +188,6 @@ class _CreateToDoState extends State<CreateToDo> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Créer une tâche"),
-        automaticallyImplyLeading: true,
-        centerTitle: true,
         backgroundColor: Colors.blue
       ),
       body: SingleChildScrollView(
@@ -327,7 +325,7 @@ class _CreateToDoState extends State<CreateToDo> {
                               }
                               await _handleAddData(titre: titreTodo.text, note : note, categoryId: categoryId);
                               if (context.mounted) {
-                                context.goNamed('todo-list');
+                                context.pop();
                               }
                             }
                           },

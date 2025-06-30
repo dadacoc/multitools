@@ -13,27 +13,6 @@ class Calculatrice extends StatefulWidget {
 
 class _CalculatriceState extends State<Calculatrice> {
 
-  //Navigation Bar
-  final int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    switch (index) {
-      case 0:
-        context.goNamed('calculatrice');
-        break;
-      case 1:
-        context.goNamed('transaction');
-        break;
-      case 2:
-        context.goNamed('todo-list');
-        break;
-      default:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Page non existante ou en production'))
-        );
-    }
-  }
-
   //Data
   List<Map<String,dynamic>> data = [];
   late Database database;
@@ -127,7 +106,6 @@ class _CalculatriceState extends State<Calculatrice> {
       appBar: AppBar(
        title: const Text("Calculatrice"),
        backgroundColor: Colors.blue,
-       automaticallyImplyLeading: false,
       ),
       body: Stack(
         children: [
@@ -216,16 +194,6 @@ class _CalculatriceState extends State<Calculatrice> {
               )
           )
         ]
-      ),
-      bottomNavigationBar: NavigationBar(
-          destinations: [
-            const NavigationDestination(icon: Icon(Icons.calculate), label: "Calculatrice"),
-            const NavigationDestination(icon: Icon(Icons.price_check), label: "Transaction"),
-            const NavigationDestination(icon: Icon(Icons.check_box), label: "To-Do List"),
-            const NavigationDestination(icon: Icon(Icons.dehaze_outlined), label: "Plus")
-          ],
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: _onItemTapped,
       ),
     );
   }

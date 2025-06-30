@@ -212,8 +212,6 @@ class _EditTodoState extends State<EditTodo> {
     return Scaffold(
       appBar: AppBar(
           title: Text("Modifier une tâche"),
-          automaticallyImplyLeading: true,
-          centerTitle: true,
           backgroundColor: Colors.blue
       ),
       body: SingleChildScrollView(

@@ -87,7 +87,6 @@ class _CalculatriceSettingsState extends State<CalculatriceSettings> {
       appBar: AppBar(
         title: const Text("Settings"),
         backgroundColor: Colors.blue,
-        automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(
             onPressed: (){

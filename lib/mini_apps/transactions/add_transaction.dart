@@ -13,6 +13,7 @@ class AddTransaction extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Choix de l'ajout"),
+        backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Row(

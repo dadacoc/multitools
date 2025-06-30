@@ -32,8 +32,6 @@ class _NoteState extends State<Note> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Ajouter une note"),
-        centerTitle: true,
-        automaticallyImplyLeading: true,
         backgroundColor: Colors.blue,
         actions: [
           IconButton(

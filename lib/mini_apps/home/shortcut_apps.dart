@@ -11,7 +11,7 @@ class ShortcutApps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () { context.goNamed(miniApp['navigation']); },
+      onTap: () { context.pushNamed(miniApp['navigation']); },
       borderRadius: BorderRadius.circular(AppSizes.corners.m),
       child: Container(
         decoration: BoxDecoration(

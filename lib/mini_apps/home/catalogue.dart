@@ -1,7 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:multitools/mini_apps/home/shortcut_apps.dart';
 
 import '../../app_sizes.dart';
@@ -29,7 +26,6 @@ class _CatalogueState extends State<Catalogue> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         title: Text("Catalogue"),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,

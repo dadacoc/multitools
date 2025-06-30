@@ -47,7 +47,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text("Home Page"),
         backgroundColor: Colors.blue,
-        centerTitle: true,
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: AppSizes.padding.l ,vertical: AppSizes.padding.m),
