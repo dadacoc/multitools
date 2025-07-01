@@ -29,6 +29,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    HomeProvider provider = context.read<HomeProvider>();
+    provider.loadData().catchError((e){
+      if (mounted){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Erreur durant le chargement des données")));
+      }
+    });
     _currentTime = DateTime.now();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer){
       setState(() {

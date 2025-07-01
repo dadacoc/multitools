@@ -1,23 +1,30 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:logger/logger.dart';
 import 'package:multitools/string_extensions.dart';
 import 'package:sqflite/sqflite.dart';
+
+Logger logger = Logger(
+  level : kReleaseMode ? Level.off : Level.debug
+);
 
 class CatalogueProvider extends ChangeNotifier {
 
   late Database database;
 
-  CatalogueProvider({required this.database}){
-    filteredApps = List.from(allMiniApps);
-  }
+  List<Map<String, dynamic>> allMiniApps = [];
 
-  ///Données de test
-  final List<Map<String, dynamic>> allMiniApps = [
-    {'id':0,'name': 'Suivi Tâches', 'icon': Icons.cleaning_services, 'navigation':'chore-tracker','keywords':['calcul','tache','finance','argent']},
-    {'id':1,'name': 'Transactions', 'icon': Icons.receipt_long,'navigation':'transaction','keywords':['finance','argent','money','emprunt','pret']},
-    {'id':2,'name': 'To-Do List', 'icon': Icons.check_box_outlined,'navigation': 'todo-list','keywords':['planning','tache','rappel']},
-    {'id':3,'name': 'Épargne', 'icon': Icons.savings_outlined,'navigation':'epargne','keywords':['finance','argent','money','gestion']},
-    {'id':4,'name': 'Chronomètre', 'icon': Icons.timer_outlined,'navigation':'chronomètre','keywords':['temps', 'course', 'timer', 'montre', 'stopwatch']},
-  ];
+  CatalogueProvider({required this.database});
+
+  Future<void> loadData() async {
+    try {
+      allMiniApps = await database.query('Catalogue');
+      notifyListeners();
+
+    } catch (e,s) {
+      logger.e("Une erreur est survenue lors du chargement des données dans le home",error: e,stackTrace: s);
+      rethrow;
+    }
+  }
 
   late List<Map<String, dynamic>> filteredApps;
 
@@ -25,7 +32,7 @@ class CatalogueProvider extends ChangeNotifier {
     filteredApps = allMiniApps.where((app) {
       final query = research.toLowerCase().trim().withoutDiacritics;
       final nameMatch = (app['name'].toLowerCase().trim()).contains(query);
-      final keywords = (app['keywords'] as List<String>).join(' '); // On joint les mots-clés en une seule chaîne
+      final keywords = app['keywords'] as String;
       final keywordsMatch = (keywords.toLowerCase().withoutDiacritics).contains(query);
       return nameMatch || keywordsMatch;
     }).toList();

@@ -1,3 +1,4 @@
+import 'package:multitools/apps.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -51,6 +52,43 @@ Future<Database> initialiseDatabase() async {
           );
           '''
         );
+        await db.execute(
+          '''
+          CREATE TABLE "Home" (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            numero INTEGER,
+            FOREIGN KEY (catalogue_id) REFERENCE Catalogue(id)
+          );
+          '''
+        );
+        await db.execute(
+          '''
+          CREATE TABLE "Catalogue" (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            icon TEXT,
+            navigation TEXT,
+            keywords TEXT
+          );
+          '''
+        );
+
+        //Ajout des données de base :
+
+        final batch = db.batch(); //Permet de faire des groupe d'action (pour contacter la db une seul fois)
+
+        for (int i = 1; i != 6 ; i++) {
+          batch.insert('Home', {'numero': i, 'catalogue_id':null});
+        }
+
+        for (final app in Apps.allMiniApps) {
+          batch.insert('Catalogue', {
+           'name' :  app['name'],
+            'navigation' : app['navigation'],
+            'keywords' : (app['keywords'] as List<String>).join(',')
+          });
+        }
+        await batch.commit(noResult: true);
     },
       //On gère les mise à jour future
     onUpgrade: (Database db ,int oldVersion , int newVersion) async {
@@ -80,6 +118,43 @@ Future<Database> initialiseDatabase() async {
           ALTER TABLE Calculatrice_main RENAME TO ChoreTracker_main;
           '''
         );
+        await db.execute(
+          '''
+          CREATE TABLE "Home" (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            numero INTEGER NOT NULL UNIQUE,
+            FOREIGN KEY (catalogue_id) REFERENCES Catalogue(id)
+          );
+          '''
+        );
+        await db.execute(
+          '''
+          CREATE TABLE "Catalogue" (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            icon TEXT,
+            navigation TEXT,
+            keywords TEXT
+          );
+          '''
+        );
+
+        //Ajout des données de base :
+
+        final batch = db.batch(); //Permet de faire des groupe d'action (pour contacter la db une seul fois)
+
+        for (int i = 1; i != 6 ; i++) {
+          batch.insert('Home', {'numero': i, 'catalogue_id':null});
+        }
+
+        for (final app in Apps.allMiniApps) {
+          batch.insert('Catalogue', {
+            'name' :  app['name'],
+            'navigation' : app['navigation'],
+            'keywords' : (app['keywords'] as List<String>).join(',')
+          });
+        }
+        await batch.commit(noResult: true);
       }
     }
   );

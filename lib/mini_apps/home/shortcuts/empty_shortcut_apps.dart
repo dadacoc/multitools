@@ -36,6 +36,12 @@ class _EmptyShortcutTitleState extends State<EmptyShortcutTitle> with SingleTick
     super.dispose();
   }
 
+  void showSnack(String message){
+    if (mounted){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -43,7 +49,16 @@ class _EmptyShortcutTitleState extends State<EmptyShortcutTitle> with SingleTick
       onTap: () async {
         final Map<String, dynamic>? miniApp = await context.pushNamed('catalogue',extra: true) as Map<String, dynamic>?;
         if (miniApp != null && context.mounted) {
-          provider.onSelectShortCut(miniApp, widget.index);
+          try {
+            await provider.onSelectShortcut(miniApp: miniApp, index: widget.index);
+          } catch (e) {
+            showSnack("Une erreur est survenue lors de la selection du raccourci");
+          }
+          try {
+            await provider.loadData();
+          }catch (e) {
+            showSnack("Une erreur est survenu lors du raffrachissement des données, tentez de relancer la page");
+          }
         }
       },
       child: Container(

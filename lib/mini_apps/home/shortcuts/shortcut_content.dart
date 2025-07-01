@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:multitools/app_sizes.dart';
 
+import '../../../apps.dart';
+
 class ShortcutContent extends StatelessWidget {
 
   final Map<String, dynamic> miniApp;
@@ -19,7 +21,7 @@ class ShortcutContent extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(miniApp['icon'],color: Theme.of(context).colorScheme.primary,size: AppSizes.icon.l,),
+            Icon(Apps.stringToIcon(miniApp['icon']) ?? Icons.error,color: Theme.of(context).colorScheme.primary,size: AppSizes.icon.l,),
             SizedBox(height: AppSizes.gap.s,),
             Text(miniApp['name'],style: Theme.of(context).textTheme.titleMedium,textAlign: TextAlign.center,)
           ],

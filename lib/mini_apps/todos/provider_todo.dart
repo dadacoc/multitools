@@ -27,7 +27,7 @@ class TodoProvider extends ChangeNotifier {
       }
 
       data = await database.rawQuery(
-        '''
+      '''
       SELECT ToDo_main.id , ToDo_main.titre , ToDo_main.note , ToDo_main.checked , ToDo_category.name AS categoryName
       FROM ToDo_main
       JOIN ToDo_category ON ToDo_category.id = ToDo_main.category_id

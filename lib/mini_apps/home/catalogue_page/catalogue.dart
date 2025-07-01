@@ -19,6 +19,17 @@ class Catalogue extends StatefulWidget {
 class _CatalogueState extends State<Catalogue> {
 
   @override
+  void initState() {
+    super.initState();
+    CatalogueProvider provider = context.read<CatalogueProvider>();
+    provider.loadData().catchError((e){
+      if (mounted){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Erreur durant le chargement des données")));
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     final CatalogueProvider provider = context.watch<CatalogueProvider>();
