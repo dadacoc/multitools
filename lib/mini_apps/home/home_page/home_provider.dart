@@ -9,6 +9,9 @@ Logger logger = Logger(
 
 class HomeProvider extends ChangeNotifier{
 
+  //EDIT
+  bool isInEditMode = false;
+
   late Database database;
 
   List<Map<String,dynamic>> fakedatabase = [];
@@ -56,6 +59,17 @@ class HomeProvider extends ChangeNotifier{
   void onSelectShortCut(Map<String,dynamic> miniApp, int index){
     fakedatabase[index] = {'numero':index,'shortcuts_id':miniApp['id']};
     shortcuts[index] = miniApp;
+    notifyListeners();
+  }
+
+  void toggleEditMode(){
+    isInEditMode = !isInEditMode;
+    notifyListeners();
+  }
+
+  Future<void> deleteShortcut({required int index}) async {
+    fakedatabase[index] = {'numero': index,'shortcuts_id':null};
+    shortcuts[index] = null;
     notifyListeners();
   }
 

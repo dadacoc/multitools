@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multitools/mini_apps/home/catalogue_page/catalogue_provider.dart';
-import 'package:multitools/mini_apps/home/shortcut_apps.dart';
+import 'package:multitools/mini_apps/home/shortcuts/shortcut_apps.dart';
 import 'package:provider/provider.dart';
 
 import '../../../app_sizes.dart';

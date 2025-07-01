@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:multitools/mini_apps/home/home_page/home_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../app_sizes.dart';
+import '../../../app_sizes.dart';
 
 class EmptyShortcutTitle extends StatefulWidget {
 
