@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:logger/logger.dart';
 
@@ -21,22 +20,27 @@ class HomeProvider extends ChangeNotifier{
 
   List<Map<String,dynamic>> home = [];
 
-  List<Map<String,dynamic>?> shortcuts = [];
+  late List<Map<String,dynamic>> shortcuts;
 
-  HomeProvider({required this.database});
+  HomeProvider({required this.database}){
+    loadData();
+  }
 
   List<Map<String, dynamic>> allMiniApps = [];
 
 
   Future<void> loadData() async {
+    isLoading = true;
+    uiError = null;
+    notifyListeners();
     try {
       home = await database.query('Home');
 
       shortcuts = await database.rawQuery(
         '''
-        SELECT Home.numero AND name AND navigation AND icon
-        FROM Catalogue
-        JOIN Home ON Home.catalogue_id = Catalogue.id
+        SELECT Home.numero, Catalogue.name, Catalogue.navigation, Catalogue.icon
+        FROM Home
+        LEFT JOIN Catalogue ON Home.catalogue_id = Catalogue.id
         ORDER BY Home.numero ASC;
         '''
       );
@@ -46,11 +50,17 @@ class HomeProvider extends ChangeNotifier{
 
     } catch (e,s) {
       logger.e("Une erreur est survenue lors du chargement des données dans le home",error: e,stackTrace: s);
-      rethrow;
+      uiError = "Une erreur est survenue lors du chargement des données dans le home";
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
 
   Future<void> onSelectShortcut({required Map<String,dynamic> miniApp, required int index}) async {
+    isLoading = true;
+    uiError = null;
+    notifyListeners();
     try {
       await database.update(
           'Home',
@@ -60,7 +70,9 @@ class HomeProvider extends ChangeNotifier{
       );
     } catch (e,s) {
       logger.e("Une erreur est survenue lors de la mise à jour du raccourcis",error: e,stackTrace: s);
-      rethrow;
+      uiError = "Une erreur est survenue lors de la mise à jour du raccourci";
+    }finally {
+      await loadData();
     }
 
   }
@@ -71,6 +83,9 @@ class HomeProvider extends ChangeNotifier{
   }
 
   Future<void> deleteShortcut({required int index}) async {
+    isLoading = true;
+    uiError = null;
+    notifyListeners();
     try {
       await database.update(
         'Home',
@@ -81,9 +96,15 @@ class HomeProvider extends ChangeNotifier{
         whereArgs: [index]
       );
     } catch (e,s) {
-      logger.e("Une erreur est survenue lors de la suppression du raccourcis",error: e,stackTrace: s);
-      rethrow;
+      logger.e("Une erreur est survenue lors de la suppression du raccourci",error: e,stackTrace: s);
+      uiError = "Une erreur est survenue lors de la suppression du raccourci";
+    } finally {
+      await loadData();
     }
+  }
+
+  void resetError(){
+    uiError = null;
   }
 
 }

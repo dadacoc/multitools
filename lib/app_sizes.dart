@@ -12,7 +12,7 @@ class AppSizes {
   static const double _p16 = 16.0;
   static const double _p24 = 24.0;
   static const double _p32 = 32.0;
-  static const double _p48 = 48.0;
+  //static const double _p48 = 48.0;
   static const double _p64 = 64.0;
 
   // --- 2. TOKENS SÉMANTIQUES PAR CONTEXTE ---

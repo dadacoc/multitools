@@ -57,7 +57,8 @@ Future<Database> initialiseDatabase() async {
           CREATE TABLE "Home" (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             numero INTEGER,
-            FOREIGN KEY (catalogue_id) REFERENCE Catalogue(id)
+            catalogue_id INTEGER,
+            FOREIGN KEY (catalogue_id) REFERENCES Catalogue(id)
           );
           '''
         );
@@ -77,7 +78,7 @@ Future<Database> initialiseDatabase() async {
 
         final batch = db.batch(); //Permet de faire des groupe d'action (pour contacter la db une seul fois)
 
-        for (int i = 1; i != 6 ; i++) {
+        for (int i = 0; i != 5 ; i++) {
           batch.insert('Home', {'numero': i, 'catalogue_id':null});
         }
 
@@ -85,7 +86,8 @@ Future<Database> initialiseDatabase() async {
           batch.insert('Catalogue', {
            'name' :  app['name'],
             'navigation' : app['navigation'],
-            'keywords' : (app['keywords'] as List<String>).join(',')
+            'keywords' : (app['keywords'] as List<String>).join(','),
+            'icon' : app['icon'],
           });
         }
         await batch.commit(noResult: true);
@@ -123,6 +125,7 @@ Future<Database> initialiseDatabase() async {
           CREATE TABLE "Home" (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             numero INTEGER NOT NULL UNIQUE,
+            catalogue_id INTEGER,
             FOREIGN KEY (catalogue_id) REFERENCES Catalogue(id)
           );
           '''
@@ -143,7 +146,7 @@ Future<Database> initialiseDatabase() async {
 
         final batch = db.batch(); //Permet de faire des groupe d'action (pour contacter la db une seul fois)
 
-        for (int i = 1; i != 6 ; i++) {
+        for (int i = 0; i != 5 ; i++) {
           batch.insert('Home', {'numero': i, 'catalogue_id':null});
         }
 
@@ -151,7 +154,8 @@ Future<Database> initialiseDatabase() async {
           batch.insert('Catalogue', {
             'name' :  app['name'],
             'navigation' : app['navigation'],
-            'keywords' : (app['keywords'] as List<String>).join(',')
+            'keywords' : (app['keywords'] as List<String>).join(','),
+            'icon' : app['icon'],
           });
         }
         await batch.commit(noResult: true);

@@ -13,20 +13,31 @@ class CatalogueProvider extends ChangeNotifier {
 
   List<Map<String, dynamic>> allMiniApps = [];
 
-  CatalogueProvider({required this.database});
+  late List<Map<String, dynamic>> filteredApps;
+
+  CatalogueProvider({required this.database}){
+    loadData();
+  }
+
+  bool isLoading = false;
+  String? uiError;
 
   Future<void> loadData() async {
+    isLoading = true;
+    uiError = null;
+    notifyListeners();
     try {
       allMiniApps = await database.query('Catalogue');
-      notifyListeners();
+      filteredApps = List.from(allMiniApps);
 
     } catch (e,s) {
       logger.e("Une erreur est survenue lors du chargement des données dans le home",error: e,stackTrace: s);
-      rethrow;
+      uiError = "Une erreur est survenue lors du chargement des données dans le home" ;
+    }finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
-
-  late List<Map<String, dynamic>> filteredApps;
 
   void filterApps(String research){
     filteredApps = allMiniApps.where((app) {
@@ -38,6 +49,11 @@ class CatalogueProvider extends ChangeNotifier {
     }).toList();
     notifyListeners();
   }
+
+  void resetError(){
+    uiError = null;
+  }
+
 
 
 
