@@ -4,35 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:provider/provider.dart';
 
-class Calculatrice extends StatefulWidget {
-  const Calculatrice({super.key});
+class ChoreTracker extends StatefulWidget {
+  const ChoreTracker({super.key});
 
   @override
-  State<Calculatrice> createState() => _CalculatriceState();
+  State<ChoreTracker> createState() => _ChoreTrackerState();
 }
 
-class _CalculatriceState extends State<Calculatrice> {
-
-  //Navigation Bar
-  final int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    switch (index) {
-      case 0:
-        context.go('/Calculatrice');
-        break;
-      case 1:
-        context.go('/Transaction');
-        break;
-      case 2:
-        context.go('/ToDoList');
-        break;
-      default:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Page non existante ou en production'))
-        );
-    }
-  }
+class _ChoreTrackerState extends State<ChoreTracker> {
 
   //Data
   List<Map<String,dynamic>> data = [];
@@ -59,15 +38,15 @@ class _CalculatriceState extends State<Calculatrice> {
     setState(() {
       isLoading = true;
     });
-    List<Map<String,dynamic>> dataQuery = await database.query('Calculatrice_main');
+    List<Map<String,dynamic>> dataQuery = await database.query('ChoreTracker_main');
     if (dataQuery.isEmpty){
       await database.insert(
-        'Calculatrice_main',{
+        'ChoreTracker_main',{
           'argent' : 0.0,
           'argent_plus' : 0.0,
           'nombre_fois' : 0
       });
-      dataQuery = await database.query('Calculatrice_main');
+      dataQuery = await database.query('ChoreTracker_main');
     }
     data = dataQuery;
     await updateVar();
@@ -75,7 +54,7 @@ class _CalculatriceState extends State<Calculatrice> {
 
   Future<void> updateData(double argent ,double argentPlus , int nombreFois) async {
     await database.update(
-        'Calculatrice_main',
+        'ChoreTracker_main',
         {
           'argent' : argent,
           'argent_plus' : argentPlus,
@@ -125,9 +104,8 @@ class _CalculatriceState extends State<Calculatrice> {
 
     return Scaffold(
       appBar: AppBar(
-       title: const Text("Calculatrice"),
+       title: const Text("Suivi Tâches"),
        backgroundColor: Colors.blue,
-       automaticallyImplyLeading: false,
       ),
       body: Stack(
         children: [
@@ -139,7 +117,7 @@ class _CalculatriceState extends State<Calculatrice> {
                     children: [
                       IconButton(
                         onPressed: () async {
-                            await context.push<bool>("/Calculatrice/Settings");
+                            await context.pushNamed<bool>("chore-tracker-settings");
                             loadData();
                         },
                         icon: const Icon(Icons.settings),
@@ -216,16 +194,6 @@ class _CalculatriceState extends State<Calculatrice> {
               )
           )
         ]
-      ),
-      bottomNavigationBar: NavigationBar(
-          destinations: [
-            const NavigationDestination(icon: Icon(Icons.calculate), label: "Calculatrice"),
-            const NavigationDestination(icon: Icon(Icons.price_check), label: "Transaction"),
-            const NavigationDestination(icon: Icon(Icons.check_box), label: "To-Do List"),
-            const NavigationDestination(icon: Icon(Icons.dehaze_outlined), label: "Plus")
-          ],
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: _onItemTapped,
       ),
     );
   }

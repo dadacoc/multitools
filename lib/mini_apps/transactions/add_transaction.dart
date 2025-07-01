@@ -13,6 +13,7 @@ class AddTransaction extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Choix de l'ajout"),
+        backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Row(
@@ -20,7 +21,7 @@ class AddTransaction extends StatelessWidget {
           children: [
             ElevatedButton(
                 onPressed: () async {
-                  bool? add = await context.push('/Transaction/A_donner');
+                  bool? add = await context.pushNamed('transaction-a-donner');
                   if (add==true && context.mounted){
                     context.pop(true);
                   }
@@ -29,7 +30,7 @@ class AddTransaction extends StatelessWidget {
             ),
             ElevatedButton(
                 onPressed: () async {
-                  bool? add = await context.push('/Transaction/A_recevoir');
+                  bool? add = await context.pushNamed('transaction-a-recevoir');
                   if (add==true && context.mounted){
                     context.pop(true);
                   }

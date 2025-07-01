@@ -97,8 +97,6 @@ class _EditTransactionState extends State<EditTransaction> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Modifier la transaction :"),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
       ),
       body: SingleChildScrollView(
@@ -259,15 +257,15 @@ class _EditTransactionState extends State<EditTransaction> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ElevatedButton(
-              onPressed: () => context.go('/Transaction'),
+              onPressed: () => context.pop(),
               child: const Text("Annuler"),
             ),
             ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()){
-                  await _handleEditData(id: id, nom: nom, somme: somme, cause: cause);
+                  await _handleEditData(id: id, nom: nom, somme: double.parse(sommeRestante.text), cause: cause);
                   if (context.mounted){
-                    context.go('/Transaction');
+                    context.pop();
                   }
                 }
               },

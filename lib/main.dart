@@ -1,3 +1,5 @@
+import 'package:multitools/mini_apps/home/catalogue_page/catalogue_provider.dart';
+import 'package:multitools/mini_apps/home/home_page/home_provider.dart';
 import 'package:multitools/mini_apps/todos/provider_todo.dart';
 import 'package:multitools/mini_apps/transactions/provider.dart';
 import 'package:multitools/router.dart';
@@ -6,11 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   final database = await initialiseDatabase();
+  await initializeDateFormatting('fr_FR');
   runApp(MyApp(database : database));
 }
 class MyApp extends StatelessWidget {
@@ -24,6 +28,8 @@ class MyApp extends StatelessWidget {
         Provider<Database>.value(value: database),
         ChangeNotifierProvider(create: (_) => TransactionsProvider(database)),
         ChangeNotifierProvider(create: (_) => TodoProvider(database: database)),
+        ChangeNotifierProvider(create: (_) => CatalogueProvider(database: database)),
+        ChangeNotifierProvider(create: (_) => HomeProvider(database: database))
       ],
       child: MaterialApp.router(
         routerConfig: router,

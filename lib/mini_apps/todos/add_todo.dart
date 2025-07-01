@@ -66,6 +66,7 @@ class _CreateToDoState extends State<CreateToDo> {
 
     TextEditingController searchBar = TextEditingController();
     String categorieChoisie = categorie.text;
+    List<Map<String, dynamic>> filteredCategories = List.from(provider.categories);
 
     return await showModalBottomSheet<String?>(
         context: context,
@@ -76,7 +77,6 @@ class _CreateToDoState extends State<CreateToDo> {
           return StatefulBuilder(
               builder: (context , setState){
                 TodoProvider provider = Provider.of<TodoProvider>(listen: true,context);
-                List<Map<String, dynamic>> filteredCategories = List.from(provider.categories);
 
                 return Container(
                   padding: EdgeInsets.only(top: 20,left: 20,right: 20, bottom: MediaQuery.of(context).viewInsets.bottom), //Permet de mettre le padding du clavier
@@ -96,7 +96,7 @@ class _CreateToDoState extends State<CreateToDo> {
                         ),
                         onChanged: (recherche){
                           setState((){
-                            filteredCategories = provider.categories.where((categorie) => categorie['name'].toLowerCase().contains(recherche.toLowerCase())).toList();
+                            filteredCategories = provider.categories.where((categorie) => (categorie['name'].toLowerCase().trim()).contains(recherche.toLowerCase().trim())).toList();
                           });
                         },
                       ),
@@ -188,8 +188,6 @@ class _CreateToDoState extends State<CreateToDo> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Créer une tâche"),
-        automaticallyImplyLeading: true,
-        centerTitle: true,
         backgroundColor: Colors.blue
       ),
       body: SingleChildScrollView(
@@ -234,7 +232,7 @@ class _CreateToDoState extends State<CreateToDo> {
                             onPressed: () async {
 
                               if (titreTodo.text.trim().isNotEmpty){
-                                final String? noteUser = await context.push('/ToDoList/NoteToDo',extra: <String,String>{'titre' : titreTodo.text , 'note' : note }); //On précise que c'est un Map<String,String> pour éviter des erreurs de cast
+                                final String? noteUser = await context.pushNamed('note-todo',extra: <String,String>{'titre' : titreTodo.text , 'note' : note }); //On précise que c'est un Map<String,String> pour éviter des erreurs de cast
                                 if (noteUser!=null && noteUser.isNotEmpty){
                                   note = noteUser;
                                 }
@@ -295,7 +293,7 @@ class _CreateToDoState extends State<CreateToDo> {
                         height: 35,
                         child: TextButton(
                             onPressed: () async {
-                              final String? categorieCreer = await context.push('/ToDoList/CreateCategory');
+                              final String? categorieCreer = await context.pushNamed('create-category-todo');
                               if (categorieCreer!=null && categorieCreer.isNotEmpty){
                                 categorie.text=categorieCreer;
                               }
@@ -327,7 +325,7 @@ class _CreateToDoState extends State<CreateToDo> {
                               }
                               await _handleAddData(titre: titreTodo.text, note : note, categoryId: categoryId);
                               if (context.mounted) {
-                                context.go('/ToDoList');
+                                context.pop();
                               }
                             }
                           },

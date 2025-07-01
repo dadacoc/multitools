@@ -42,12 +42,10 @@ class _AfficherPlusTodoState extends State<AfficherPlusTodo> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Afficher Plus"),
-        centerTitle: true,
-        automaticallyImplyLeading: true,
         actions: [
           IconButton(
               onPressed: () async {
-                Map<String,dynamic>? result = await context.push('/ToDoList/EditTodo',extra: todo);
+                Map<String,dynamic>? result = await context.pushNamed('edit-todo',extra: todo);
                 if (result!=null){
                   setState(() {
                     todo = result;

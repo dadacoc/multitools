@@ -138,8 +138,6 @@ class _EditCategoryState extends State<EditCategory> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Modifier une catégorie"),
-        automaticallyImplyLeading: true,
-        centerTitle: true,
         backgroundColor: Colors.blue,
       ),
       body: Form(

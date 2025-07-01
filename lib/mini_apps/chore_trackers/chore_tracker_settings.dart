@@ -4,14 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:provider/provider.dart';
 
-class CalculatriceSettings extends StatefulWidget {
-  const CalculatriceSettings({super.key});
+class ChoreTrackerSettings extends StatefulWidget {
+  const ChoreTrackerSettings({super.key});
 
   @override
-  State<CalculatriceSettings> createState() => _CalculatriceSettingsState();
+  State<ChoreTrackerSettings> createState() => _ChoreTrackerSettingsState();
 }
 
-class _CalculatriceSettingsState extends State<CalculatriceSettings> {
+class _ChoreTrackerSettingsState extends State<ChoreTrackerSettings> {
 
   List<Map<String,dynamic>> data = [];
   late Database database;
@@ -34,14 +34,14 @@ class _CalculatriceSettingsState extends State<CalculatriceSettings> {
     setState(() {
       isLoading = true;
     });
-    List<Map<String,dynamic>> dataQuery = await database.query('Calculatrice_main');
+    List<Map<String,dynamic>> dataQuery = await database.query('ChoreTracker_main');
     data = dataQuery;
     await updateVar();
   }
 
   Future<void> updateData(double argentPlus) async {
     await database.update(
-        'Calculatrice_main',
+        'ChoreTracker_main',
         {
           'argent_plus' : argentPlus,
         },
@@ -87,7 +87,6 @@ class _CalculatriceSettingsState extends State<CalculatriceSettings> {
       appBar: AppBar(
         title: const Text("Settings"),
         backgroundColor: Colors.blue,
-        automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(
             onPressed: (){

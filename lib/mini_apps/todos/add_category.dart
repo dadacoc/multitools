@@ -111,8 +111,6 @@ class _CreateCategoryState extends State<CreateCategory> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Créer une catégorie"),
-        automaticallyImplyLeading: true,
-        centerTitle: true,
         backgroundColor: Colors.blue,
       ),
       body: Form(
