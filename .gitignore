@@ -12,6 +12,7 @@ Desktop.ini
 .svn/
 .swiftpm/
 migrate_working_dir/
+PreviousReadme.txt
 
 # IntelliJ related
 *.iml
