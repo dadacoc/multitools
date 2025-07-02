@@ -52,3 +52,6 @@ app.*.map.json
 csync_journal.db
 ._sync_*.db
 .sync-exclude.lst
+
+#Keystores
+/keystores/
