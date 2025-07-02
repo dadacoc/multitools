@@ -36,8 +36,7 @@ class _HomePageState extends State<HomePage> {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: provider.isInEditMode ? Text("Mode édition") : Text(
-                "Home Page"),
+            title: provider.isInEditMode ? Text("Mode édition") : Text("Page d'accueil"),
             backgroundColor: Colors.blue,
           ),
           body: provider.isLoading

@@ -54,5 +54,5 @@ csync_journal.db
 .sync-exclude.lst
 
 #Keystores
-/keystores/
+/android/app/keystores/
 /android/key.properties
