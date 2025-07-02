@@ -55,3 +55,4 @@ csync_journal.db
 
 #Keystores
 /keystores/
+/android/key.properties
