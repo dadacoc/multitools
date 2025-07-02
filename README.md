@@ -6,11 +6,11 @@ An all-in-one Flutter application built as a personal portfolio to master and de
 
 - *Home page*
 
-<img src="assets/images/presentation/home_page.png" alt="Aperçu de la page d'accueil" width="1080"/>
+<img src="assets/images/presentation/home_page.png" alt="Aperçu de la page d'accueil" width="300"/>
 
 - *Catalogue*
 
-<img src="assets/images/presentation/catalogue.png" alt="Aperçu de la page d'accueil" width="1080"/>
+<img src="assets/images/presentation/catalogue.png" alt="Aperçu de la page d'accueil" width="300"/>
 
 ## About the project 📝
 
