@@ -51,3 +51,4 @@ app.*.map.json
 .sync_*.db-wal
 csync_journal.db
 ._sync_*.db
+.sync-exclude.lst
